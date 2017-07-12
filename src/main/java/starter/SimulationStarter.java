@@ -27,10 +27,12 @@ public class SimulationStarter {
 		try {
 			con = di.conectToDatabase();
 			di.createTables(con);
-			//di.fuelleTabellenMitCSV();
 			tdb.insertAngestellten(con);
 			tdb.insertFilialleiter(con);
 			tdb.insertKunden(con);
+			tdb.insertGirokonto(con);
+			tdb.insertSparbuch(con);
+			tdb.insertKreditkarte(con);
 			con.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

@@ -15,10 +15,25 @@ import tools.EnumParser.kontoStatus;
 import tools.EnumParser.status;
 import tools.EnumParser.titel;
 
+/**
+ * Fill database with testdata from CSV files.
+ * 
+ * @author caro
+ *
+ */
 public class TestdataFiller {
 
+	/**
+	 * Fill table 'Angestellter' with testdata
+	 * 
+	 * @param con
+	 *            Connection to database
+	 * @throws SQLException
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 */
 	@SuppressWarnings("static-access")
-	public static void insertAngestellten(Connection con) throws SQLException, FileNotFoundException, ParseException {
+	public void insertAngestellten(Connection con) throws SQLException, FileNotFoundException, ParseException {
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
@@ -93,9 +108,17 @@ public class TestdataFiller {
 		System.out.println("Angestellten Erfolgreich hinzugefuegt.");
 	}
 
+	/**
+	 * Fill table 'Filialleiter' with testdata
+	 * 
+	 * @param con
+	 *            Connection to database
+	 * @throws SQLException
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 */
 	@SuppressWarnings("static-access")
-	public static void insertFilialleiter(Connection con)
-			throws SQLException, FileNotFoundException, ParseException {
+	public void insertFilialleiter(Connection con) throws SQLException, FileNotFoundException, ParseException {
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
@@ -170,8 +193,17 @@ public class TestdataFiller {
 		System.out.println("Filialleiter Erfolgreich hinzugefuegt.");
 	}
 
+	/**
+	 * Fill table 'Kunde' with testdata
+	 * 
+	 * @param con
+	 *            Connection to database
+	 * @throws SQLException
+	 * @throws FileNotFoundException
+	 * @throws ParseException
+	 */
 	@SuppressWarnings("static-access")
-	public static void insertKunden(Connection con) throws SQLException, FileNotFoundException, ParseException {
+	public void insertKunden(Connection con) throws SQLException, FileNotFoundException, ParseException {
 
 		File f = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden2.csv");
@@ -245,5 +277,136 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunden Erfolgreich hinzugefuegt.");
+	}
+
+	/**
+	 * Fill table 'Girokonto' with testdata
+	 * @param con Connection to database
+	 * @throws FileNotFoundException
+	 * @throws SQLException
+	 */
+	public void insertGirokonto(Connection con) throws FileNotFoundException, SQLException {
+
+		File f = new File(
+				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Girokonto.csv");
+
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		try {
+			br.readLine();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+
+		String temp = "";
+		String[] s;
+		String split = ":";
+
+		PreparedStatement ps = con.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebueren) VALUES (?,?,?)");
+
+		try {
+			while ((temp = br.readLine()) != null) {
+				s = temp.split(split);
+
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setInt(2, Integer.parseInt(s[1]));
+				if (s.length <= 2) {
+					ps.setInt(3, 0);
+				} else {
+					ps.setInt(3, Integer.parseInt(s[2]));
+				}
+				ps.executeUpdate();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Girokonto Erfolgreich hinzugefuegt.");
+	}
+	
+	/**
+	 * Fill table 'Sparbuch' with testdata
+	 * @param con Connection to database
+	 * @throws FileNotFoundException
+	 * @throws SQLException
+	 */
+	public void insertSparbuch(Connection con) throws FileNotFoundException, SQLException {
+
+		File f = new File(
+				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Sparbuch.csv");
+
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		try {
+			br.readLine();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+
+		String temp = "";
+		String[] s;
+		String split = ":";
+
+		PreparedStatement ps = con.prepareStatement("INSERT INTO Sparbuch(sparId, guthaben, zinsen) VALUES (?,?,?)");
+
+		try {
+			while ((temp = br.readLine()) != null) {
+				s = temp.split(split);
+
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setInt(2, Integer.parseInt(s[1]));
+				ps.setInt(3, Integer.parseInt(s[2]));
+				ps.executeUpdate();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Sparbuch Erfolgreich hinzugefuegt.");
+	}
+	
+	/**
+	 * Fill table 'Kreditkarte' with testdata
+	 * @param con Connection to database
+	 * @throws FileNotFoundException
+	 * @throws SQLException
+	 */
+	public void insertKreditkarte(Connection con) throws FileNotFoundException, SQLException {
+
+		File f = new File(
+				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kreditkarte.csv");
+
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		try {
+			br.readLine();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+
+		String temp = "";
+		String[] s;
+		String split = ":";
+
+		PreparedStatement ps = con.prepareStatement("INSERT INTO Kreditkartenkonto(kreditkarteId, betrag, zinsen) VALUES (?,?,?)");
+
+		try {
+			while ((temp = br.readLine()) != null) {
+				s = temp.split(split);
+
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setInt(2, Integer.parseInt(s[1]));
+				if (s.length <= 2) {
+					ps.setInt(3, 0);
+				} else {
+					ps.setInt(3, Integer.parseInt(s[2]));
+				}
+				ps.executeUpdate();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Kreditkarte Erfolgreich hinzugefuegt.");
 	}
 }
