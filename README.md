@@ -1,0 +1,2 @@
+# bankdb
+Verwaltungssimulation einer Bank
