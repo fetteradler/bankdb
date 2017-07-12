@@ -1,0 +1,12 @@
+ID;Vorname;Nachname;Geburtsdatum;Telefonnummer;Mail;Ort;Straße;PLZ;Land;Titel;EinstellDatum;Monatslohn;Frist;Status;Anstellung
+1; Marius ; Petermann ; 06.04.1978 ; 03675 / 41209043 ;; Mengersgereuth-H‰mmern ; Avendruper Str. 25 ;96529;Germany; Herr ;01.10.04;5556;;verfuegbar;Filialleiter
+2; Kristian ; Sonne ; 25.02.1966 ; 03379 / 87534264 ;; Diepensee ; Hoove 144 ;15711;Germany; Herr ;20.07.11;2476;;verfuegbar;Bankkaufmann/frau
+3; Saskia ; Schwindt ; 13.01.1931 ; 08667 / 41034798 ;; Seeon-Seebruck ; Grevener Str. 54 ;83358;Germany; Frau ;01.06.16;3327;31.05.18;krank;Bankkaufmann/frau
+4; Laila ; Scheller ; 09.02.1989 ; 04875 / 98122543 ;; Stafstedt ; Maximilianstr. 199 ;24816;Germany; Frau ;03.02.09;3641;;verfuegbar;Bankkaufmann/frau
+5; Michel ; Gilbert ; 08.02.1956 ; 09971 / 37324572 ;; Waffenbrunn ; Zum Burgschemm 188 ;93494;Germany; Herr ;01.01.08;2973;;beurlaubt;Bankkaufmann/frau
+6; Günther ; Marquardt ; 22.02.1962 ; 02656 / 23116180 ;; Virneburg ; Kösliner Str. 19 ;56729;Germany; Herr ;01.04.11;2809;;verfuegbar;Bankkaufmann/frau
+7; Angela ; Rex ; 12.11.1926 ; 09441 / 68744011 ;; Saal an der Donau ; Rektoratsweg 84 ;93342;Germany; Frau ;01.10.14;1070;31.07.17;verfuegbar;Bankkaufmann/frau
+8; Holger ; Sänger ; 28.10.1957 ; 02602 / 53100787 ;; Nomborn ; Diesbergweg 63 ;56412;Germany; Herr ;27.06.13;2587;28.02.29;verfuegbar;Bankkaufmann/frau
+9; Ingo ; Voigt ; 16.05.1945 ; 0202 / 6232254 ;; Wuppertal ; Mondstr. 198 ;42117;Germany; Herr ;01.12.99;2049;;verfuegbar;Bankkaufmann/frau
+10; Dagmar ; Finke ; 18.06.1925 ; 08021 / 42005274 ;; Waakirchen ; Enschedeweg 115a ;83666;Germany; Frau ;01.11.15;1256;31.12.17;beurlaubt;Bankkaufmann/frau
+11; Jenny ; Geppert ; 28.08.1958 ; 04204 / 65014894 ;; Wulmstorf ; Dreizehnerstr. 5 ;27321;Germany; Frau ;17.03.06;2973;;beurlaubt;Bankkaufmann/frau
