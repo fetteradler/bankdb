@@ -5,11 +5,11 @@ import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-import tools.DatenbankInitialisierer;
-import tools.TestDatensatzBefueller;
+import tools.DatabaseInitializer;
+import tools.TestdataFiller;
 
 /**
- * Startet das Programm
+ * Main of the program
  * @author caro
  *
  */
@@ -21,15 +21,16 @@ public class SimulationStarter {
 		//Scanner scanner = new Scanner(System.in);
 		System.out.println("Erstelle Datenbank...");
 		
-		DatenbankInitialisierer di = new DatenbankInitialisierer();
-		TestDatensatzBefueller tdb = new TestDatensatzBefueller();
+		DatabaseInitializer di = new DatabaseInitializer();
+		TestdataFiller tdb = new TestdataFiller();
 		Connection con = null;
 		try {
-			con = di.verbindZuDatenbank();
-			di.erstelleTabellen(con);
+			con = di.conectToDatabase();
+			di.createTables(con);
 			//di.fuelleTabellenMitCSV();
-			tdb.einfuegenAngestellten(con);
-			tdb.einfuegenFilialleiter(con);
+			tdb.insertAngestellten(con);
+			tdb.insertFilialleiter(con);
+			tdb.insertKunden(con);
 			con.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

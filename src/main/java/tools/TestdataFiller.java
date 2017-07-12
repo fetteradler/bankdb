@@ -11,18 +11,19 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import tools.EnumParser.kontoStatus;
 import tools.EnumParser.status;
 import tools.EnumParser.titel;
 
-public class TestDatensatzBefueller {
+public class TestdataFiller {
 
 	@SuppressWarnings("static-access")
-	public static void einfuegenAngestellten(Connection con)
-			throws SQLException, FileNotFoundException, ParseException {
+	public static void insertAngestellten(Connection con) throws SQLException, FileNotFoundException, ParseException {
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
 
+		@SuppressWarnings("resource")
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		try {
 			br.readLine();
@@ -45,12 +46,12 @@ public class TestDatensatzBefueller {
 				if (s[15].equals("Fillialleiter")) {
 					continue;
 				} else {
-					SQLTabellenParser tp = new SQLTabellenParser();
+					SQLTableParser tp = new SQLTableParser();
 
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4, (Date) tp.umwandlungDateFormat(s[3]));
+					ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -65,10 +66,10 @@ public class TestDatensatzBefueller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12, (Date) tp.umwandlungDateFormat(s[11]));
+					ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
 					ps.setInt(13, Integer.parseInt(s[12]));
 					if (s[13] == null) {
-						ps.setDate(14, (Date) tp.umwandlungDateFormat(s[13]));
+						ps.setDate(14, (Date) tp.convertingDateFormat(s[13]));
 					} else {
 						ps.setDate(14, null);
 					}
@@ -91,14 +92,15 @@ public class TestDatensatzBefueller {
 
 		System.out.println("Angestellten Erfolgreich hinzugefuegt.");
 	}
-	
+
 	@SuppressWarnings("static-access")
-	public static void einfuegenFilialleiter(Connection con)
+	public static void insertFilialleiter(Connection con)
 			throws SQLException, FileNotFoundException, ParseException {
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
 
+		@SuppressWarnings("resource")
 		BufferedReader br = new BufferedReader(new FileReader(f));
 		try {
 			br.readLine();
@@ -111,7 +113,7 @@ public class TestDatensatzBefueller {
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
-				"INSERT INTO Filialleiter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				"INSERT INTO Filialleiter(leiterId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
 			while ((temp = br.readLine()) != null) {
@@ -119,12 +121,12 @@ public class TestDatensatzBefueller {
 				s = temp.split(split);
 
 				if (s[15].equals("Fillialleiter")) {
-					SQLTabellenParser tp = new SQLTabellenParser();
+					SQLTableParser tp = new SQLTableParser();
 
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4, (Date) tp.umwandlungDateFormat(s[3]));
+					ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -139,10 +141,10 @@ public class TestDatensatzBefueller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12, (Date) tp.umwandlungDateFormat(s[11]));
+					ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
 					ps.setInt(13, Integer.parseInt(s[12]));
 					if (s[13] == null) {
-						ps.setDate(14, (Date) tp.umwandlungDateFormat(s[13]));
+						ps.setDate(14, (Date) tp.convertingDateFormat(s[13]));
 					} else {
 						ps.setDate(14, null);
 					}
@@ -166,5 +168,82 @@ public class TestDatensatzBefueller {
 		}
 
 		System.out.println("Filialleiter Erfolgreich hinzugefuegt.");
+	}
+
+	@SuppressWarnings("static-access")
+	public static void insertKunden(Connection con) throws SQLException, FileNotFoundException, ParseException {
+
+		File f = new File(
+				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden2.csv");
+
+		@SuppressWarnings("resource")
+		BufferedReader br = new BufferedReader(new FileReader(f));
+		try {
+			br.readLine();
+		} catch (IOException e1) {
+
+			e1.printStackTrace();
+		}
+		String temp = "";
+		String[] s = null;
+		String split = ":";
+
+		PreparedStatement ps = con.prepareStatement(
+				"INSERT INTO Kunde(kundeId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, aufnahmeDatum, kontoStatus, kreditBerecht) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+
+		try {
+			while ((temp = br.readLine()) != null) {
+
+				s = temp.split(split);
+
+				SQLTableParser tp = new SQLTableParser();
+
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setString(2, s[1]);
+				ps.setString(3, s[2]);
+				ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
+				ps.setString(5, s[4]);
+				ps.setString(6, s[5]);
+				ps.setString(7, s[6]);
+				ps.setString(8, s[7]);
+				ps.setString(9, s[8]);
+				ps.setString(10, s[9]);
+				String titelEnum = s[10].trim();
+				if (titelEnum.equals("HERR")) {
+					ps.setString(11, titel.HERR.toString());
+				} else if (titelEnum.equals("FRAU")) {
+					ps.setString(11, titel.FRAU.toString());
+				} else {
+					throw new IOException();
+				}
+				ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
+
+				String statusEnum = s[12].trim();
+				if (statusEnum.equals("STANDARTKONTO")) {
+					ps.setString(13, kontoStatus.STANDARTKONTO.toString());
+				} else if (statusEnum.equals("JUGENDKONTO")) {
+					ps.setString(13, kontoStatus.JUGENDKONTO.toString());
+				} else if (statusEnum.equals("STUDENTENKONTO")) {
+					ps.setString(13, kontoStatus.STUDENTENKONTO.toString());
+				} else {
+					System.out.println("Falsche Eingabe! " + statusEnum);
+				}
+
+				String kredit = s[13].trim();
+				if (kredit.equals("1")) {
+					ps.setBoolean(14, true);
+				} else if (kredit.equals("0")) {
+					ps.setBoolean(14, false);
+				} else {
+					System.out.println("Falsche Eingabe! " + kredit);
+				}
+
+				ps.executeUpdate();
+			}
+		} catch (IOException e) {
+			e.printStackTrace();
+		}
+
+		System.out.println("Kunden Erfolgreich hinzugefuegt.");
 	}
 }
