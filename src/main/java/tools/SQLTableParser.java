@@ -49,7 +49,7 @@ public class SQLTableParser {
 	 * @return
 	 * @throws ParseException
 	 */
-	public static Date convertingDateFormat(String strOld) throws ParseException {
+	public Date convertingDateFormat(String strOld) throws ParseException {
 
 		final String oldFormat = "dd.MM.yyyy";
 		final String newFormat = "yyyy-MM-dd";

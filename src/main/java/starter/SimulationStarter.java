@@ -33,6 +33,12 @@ public class SimulationStarter {
 			tdb.insertGirokonto(con);
 			tdb.insertSparbuch(con);
 			tdb.insertKreditkarte(con);
+			tdb.insertKredit(con);
+			tdb.insertKundeSparbuch(con);
+			tdb.insertKundeGirokonto(con);
+			tdb.insertKundeKreditkarte(con);
+			tdb.insertKundeKredit(con);
+			tdb.insertAngestellterKunde(con);
 			con.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block

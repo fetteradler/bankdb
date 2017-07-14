@@ -59,7 +59,7 @@ public class DatabaseInitializer {
 	}
 
 	/**
-	 * Loescht eine Tabelle der Datenabank
+	 * Delete a table from database.
 	 * 
 	 * @param con
 	 * @throws SQLException
@@ -69,6 +69,11 @@ public class DatabaseInitializer {
 		con.createStatement().executeUpdate("DROP TABLE IF EXISTS " + tableName);
 	}
 
+	/**
+	 * Delete all tables from database.
+	 * @param con
+	 * @throws SQLException
+	 */
 	public static void deleteAllTables(Connection con) throws SQLException {
 
 		String[] tables = { "Angestellter_Sparbuch", "Angestellter_Girokonto", "Angestellter_Kreditkarte",
