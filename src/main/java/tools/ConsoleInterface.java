@@ -2,8 +2,10 @@ package tools;
 
 import java.util.Scanner;
 
+// Dokumentation!
 public class ConsoleInterface {
 
+	// Dokumentation!
 	public void anmeldung() {
 
 		Scanner scanner = new Scanner(System.in);
@@ -19,12 +21,12 @@ public class ConsoleInterface {
 			case 1:
 				System.out.println("Anmeldung Mitarbeiter...");
 				i = 1;
-				mitarbeiterScreen();
+				System.out.println("Wie möchten Sie als nächstes vorgehen?");
 				break;
 			case 2:
 				System.out.println("Anmeldung Kunde...");
 				i = 1;
-				kundeScreen();
+				System.out.println("Wie möchten Sie als nächstes vorgehen?");
 				break;
 			default:
 				System.out.println(
@@ -35,11 +37,5 @@ public class ConsoleInterface {
 		scanner.close();
 	}
 
-	public void mitarbeiterScreen() {
-		System.out.println("Wie möchten Sie als nächstes vorgehen?");
-	}
-
-	public void kundeScreen() {
-		System.out.println("Wie möchten Sie als nächstes vorgehen?");
-	}
+	// 1 Zeile muss nicht ausgelagert werden. 2 Funktionen sind auf jeden Fall zu viel
 }

@@ -9,20 +9,21 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Date;
 
-public class SQLTableParser {
+// Dokumentation!
+public abstract class SQLTableParser {
 
 	/**
 	 * Reade SQL Tables from external file
 	 * 
-	 * @param f
+	 * @param file
 	 *            File with statements
 	 * @return SQL statements
 	 * @throws IOException
 	 *             if reading file fails
 	 */
-	public static ArrayList<String> readSQLFile(File f) throws IOException {
+	static ArrayList<String> readSQLFile(File file) throws IOException {
 
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 
 		ArrayList<String> res = new ArrayList<String>();
 
@@ -30,9 +31,8 @@ public class SQLTableParser {
 
 		while ((temp = br.readLine()) != null) {
 			temp = temp.trim();
-			if (temp.equals("")) {
-				continue;
-			} else {
+			if (!temp.equals("")) {
+				// Kein continue nowendig. continue und break vermeiden so gut es geht. Sonst hast du irgendwann GOTO Programme.
 				res.add(temp);
 			}
 		}
@@ -45,11 +45,11 @@ public class SQLTableParser {
 	/**
 	 * Converting file date format to SQL date format
 	 * 
-	 * @param strOld
+	 * @param strOld Daokumentation!
 	 * @return
 	 * @throws ParseException
 	 */
-	public Date convertingDateFormat(String strOld) throws ParseException {
+	public static Date convertingDateFormat(String strOld) throws ParseException {
 
 		final String oldFormat = "dd.MM.yyyy";
 		final String newFormat = "yyyy-MM-dd";
@@ -58,30 +58,9 @@ public class SQLTableParser {
 		Date d = sdf.parse(strOld);
 		sdf.applyPattern(newFormat);
 		dateNew = sdf.format(d);
-		java.sql.Date res = java.sql.Date.valueOf(dateNew);
-		
-		return res;
+		return java.sql.Date.valueOf(dateNew);
 
 	}
 
-	/**
-	 * Reads PW from file
-	 * 
-	 * @param f
-	 *            File with PW
-	 * @return PW as String
-	 * @throws IOException
-	 */
-	public static String readPW(File f) throws IOException {
-
-		String str = "";
-		BufferedReader br = new BufferedReader(new FileReader(f));
-
-		while ((str = br.readLine()) != null) {
-			str = str.trim();
-		}
-
-		br.close();
-		return str;
-	}
+	// readPW wird nirgendwo verwendet.
 }
