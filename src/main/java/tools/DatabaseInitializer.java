@@ -8,46 +8,42 @@ import java.sql.SQLException;
 import java.util.ArrayList;
 
 /**
- * Connect MySQL database to programm
+ * Connect MySQL database to programm. Dokumentation muss viel ausführlicher werden! Der Satz spiegelt lediglich deine erste
+ * Funktion in dieser Klasse wieder.
  * 
  * @author caro
  *
  */
-public class DatabaseInitializer {
+public abstract class DatabaseInitializer {
 
-	public static final String DB = "bankdb";
-
-	public static final String URL = "localhost";
-
-	public static final String USR = "root";
-	
-	public static final String PW = "";
+	private static final String DB = "bankdb";
+	private static final String URL = "localhost"; // wird nicht verwendet?
+	private static final String USR = "root";
+	private static final String PW = "";
 
 	/**
-	 * Prepare connection to database
+	 * Prepare (!? Establish?) connection to database
 	 * 
 	 * @return Connection to database
-	 * @throws SQLException
+	 * @throws SQLException Dokumentation!
 	 */
-	public static Connection conectToDatabase() throws SQLException {
+	public static Connection connectToDatabase() throws SQLException {
 
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DB, USR, PW);
-		return connection;
-
+		return DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/" + DB, USR, PW);
 	}
 
 	/**
-	 * Create tables in database
+	 * Create tables in database. Was für Tabellen? / Woher kommt das Schema?
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws IOException
 	 *             if reading fails
-	 * @throws SQLException 
+	 * @throws SQLException Dokumentation!
 	 */
 	public static void createTables(Connection con) throws IOException, SQLException {
 
-		// loesche alle bisher bestehenden Tabellen
+		// loesche alle bisher bestehenden Tabellen - Wieso hier deutsch!?
 		deleteAllTables(con);
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "datenbanktabellen.sql");
@@ -61,21 +57,24 @@ public class DatabaseInitializer {
 	/**
 	 * Delete a table from database.
 	 * 
-	 * @param con
-	 * @throws SQLException
+	 * @param con Dokumentation!
+	 * @throws SQLException Dokumentation!
 	 */
-	public static void deleteTable(Connection con, String tableName) throws SQLException {
+	private static void deleteTable(Connection con, String tableName) throws SQLException {
 
 		con.createStatement().executeUpdate("DROP TABLE IF EXISTS " + tableName);
 	}
 
 	/**
 	 * Delete all tables from database.
-	 * @param con
-	 * @throws SQLException
+	 * @param con Dokumentation!
+	 * @throws SQLException Dokumentation!
 	 */
-	public static void deleteAllTables(Connection con) throws SQLException {
+	private static void deleteAllTables(Connection con) throws SQLException {
 
+		// Unschön, da du im Quellcode Aussagen über die Struktur deiner DB triffst aber gleichzeitig der Funktion
+		// den Namen deleteALLLLLLLTables. Versuche ein allgemeines SQL Statement zu schreiben, dass sich anschaut, welche Tabellen
+		// in der DB existieren und diese löscht.
 		String[] tables = { "Angestellter_Sparbuch", "Angestellter_Girokonto", "Angestellter_Kreditkarte",
 				"Angestellter_Kredit", "Angestellter_Kunde", "Girokonto_Kredit", "Girokonto_Kreditkarte",
 				"Filialleiter_Angestellter", "Kunde_Kredit", "Kunde_Kreditkarte", "Kunde_Girokonto", "Kunde_Sparbuch",
@@ -83,7 +82,7 @@ public class DatabaseInitializer {
 	
 		for(String table : tables) {
 			deleteTable(con, table);
-		};
+		}
 	}
 	
 }

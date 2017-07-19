@@ -2,4 +2,9 @@
 .classpath
 .project
 .settings/
-*/**/*.class
+# Nur .classes reicht nicht. In target liegen auch weitere META-Informationen, die trotzdem gespushed werden.
+target/
+
+# IntelliJ
+Bank.iml
+.idea/

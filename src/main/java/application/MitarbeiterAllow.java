@@ -10,42 +10,46 @@ import java.text.ParseException;
 
 import tools.SQLTableParser;
 
+// Dokumentation!!
 public class MitarbeiterAllow {
 
 	/**
-	 * Add a new 'Kredit' for a choosen 'Kunde'.
+	 * Add a new 'Kredit' for a chosen 'Kunde'.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @param kundeId
 	 *            Id of 'Kunde'
 	 * @param betrag
-	 *            Sum of credit
+	 *            Sum of 'Kredit'
 	 * @param zinsen
-	 *            'Zinsen' of credit
+	 *            'Zinsen' of 'Kredit'
 	 * @param raten
-	 *            Monthly rate of credit
+	 *            Monthly rate of 'Kredit'
 	 * @param laufzeit
-	 *            Term of credit
-	 * @throws SQLException
-	 * @throws ParseException
+	 *            Term of 'Kredit'
+	 * @throws SQLException Dokumentation!
+	 * @throws ParseException Dokumentation!
 	 */
 	public void allowKredit(Connection con, int kundeId, int betrag, int zinsen, int raten, String laufzeit)
 			throws SQLException, ParseException {
 
-		SQLTableParser tp = new SQLTableParser();
+		// 1. Klasse SQLTableParser kann wieder abstract sein.
+		// 2. Benennung der Variablen nicht aussagekräftig. Lieber längere Variablen,
+		// als dass man nach 3 Zeilen keine Ahnung mehr hat wofür es steht.
 
 		PreparedStatement ps1 = con
 				.prepareStatement("INSERT INTO Kredit(betrag,zinsen,raten,laufzeit) VALUES (?,?,?,?)");
 		ps1.setInt(1, betrag);
 		ps1.setInt(2, zinsen);
 		ps1.setInt(3, raten);
-		ps1.setDate(4, (Date) tp.convertingDateFormat(laufzeit));
+		ps1.setDate(4, (Date) SQLTableParser.convertingDateFormat(laufzeit)); //Gebe im SQLTableParser
+		// gleich die richtige Date Klasse zurück statt hier nochmal zu casten.
 
 		ps1.executeUpdate();
 
 		String select = "SELECT kreditId FROM Kredit WHERE betrag=" + betrag + " AND zinsen=" + zinsen + " AND raten="
-				+ raten + " AND laufzeit='" + (Date) tp.convertingDateFormat(laufzeit) + "'";
+				+ raten + " AND laufzeit='" + (Date) SQLTableParser.convertingDateFormat(laufzeit) + "'"; //s.o.
 
 		Statement stmt = con.createStatement();
 		ResultSet rs = stmt.executeQuery(select);
@@ -65,35 +69,6 @@ public class MitarbeiterAllow {
 
 		con.close();
 	}
-	
-	public void allowGirokonto(Connection con, int kundeId, int guthaben, int gebueren) throws SQLException {
-		
 
-		PreparedStatement ps1 = con
-				.prepareStatement("INSERT INTO Girokonto(guthaben, gebueren) VALUES (?,?)");
-		ps1.setInt(1, guthaben);
-		ps1.setInt(2, gebueren);
-
-		ps1.executeUpdate();
-		
-		String select = "SELECT giroId FROM Girokonto WHERE guthaben=" + guthaben + " AND gebueren=" + gebueren;
-
-		Statement stmt = con.createStatement();
-		ResultSet rs = stmt.executeQuery(select);
-		String giro = "";
-
-		while (rs.next()) {
-			giro = rs.getString("giroId");
-		}
-
-		int giroId = Integer.parseInt(giro);
-		
-		PreparedStatement ps2 = con.prepareStatement("INSERT INTO Kunde_Girokonto(giroId,kundeId) VALUES (?,?)");
-		ps2.setInt(1, giroId);
-		ps2.setInt(2, kundeId);
-
-		ps2.executeUpdate();
-
-		con.close();
-	}
+	// Gebühren nicht Gebüren. Methode wird nicht verwendet.
 }
