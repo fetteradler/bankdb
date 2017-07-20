@@ -2,9 +2,18 @@
 .classpath
 .project
 .settings/
+<<<<<<< 65d8d49d3d904ef75ae75e6d405ee77b36b80c5a
 # Nur .classes reicht nicht. In target liegen auch weitere META-Informationen, die trotzdem gespushed werden.
 target/
 
 # IntelliJ
 Bank.iml
 .idea/
+=======
+*/**/*.class
++target/
++
++# IntelliJ
++Bank.iml
++.idea/
+>>>>>>> [feature]Edit gitignore.

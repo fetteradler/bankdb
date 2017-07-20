@@ -72,6 +72,7 @@ public class SimulationStarter {
 
 			// Ab hier wieder main.
 			con.close();
+			scanner.close();
 		} catch (IOException e) {
 			// TODO Auto-generated catch block
 			e.printStackTrace();
