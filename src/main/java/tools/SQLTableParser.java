@@ -4,63 +4,66 @@ import java.io.BufferedReader;
 import java.io.File;
 import java.io.FileReader;
 import java.io.IOException;
+import java.sql.Date;
+import java.sql.SQLException;
+import java.sql.Timestamp;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.ArrayList;
-import java.util.Date;
+import java.util.Calendar;
 
-public class SQLTableParser {
+public abstract class SQLTableParser {
 
 	/**
-	 * Reade SQL Tables from external file
+	 * Reads SQL Tables from external file
 	 * 
-	 * @param f
+	 * @param file
 	 *            File with statements
-	 * @return SQL statements
+	 * @return createTables SQL statements
 	 * @throws IOException
 	 *             if reading file fails
 	 */
-	public static ArrayList<String> readSQLFile(File f) throws IOException {
+	static ArrayList<String> readSQLFile(File f) throws IOException {
 
 		BufferedReader br = new BufferedReader(new FileReader(f));
 
-		ArrayList<String> res = new ArrayList<String>();
+		ArrayList<String> createTables = new ArrayList<String>();
 
 		String temp = "";
 
 		while ((temp = br.readLine()) != null) {
 			temp = temp.trim();
-			if (temp.equals("")) {
-				continue;
-			} else {
-				res.add(temp);
+			if (!temp.equals("")) {
+				createTables.add(temp);
 			}
 		}
 
 		br.close();
 
-		return res;
+		return createTables;
 	}
 
 	/**
 	 * Converting file date format to SQL date format
 	 * 
-	 * @param strOld
-	 * @return
+	 * @param oldDate
+	 *            Date which should be converted.
+	 * @return new dateformat as a String
 	 * @throws ParseException
+	 *             if parse from old format to new fails
 	 */
-	public Date convertingDateFormat(String strOld) throws ParseException {
+	public static Date convertingDateFormat(String oldDate) throws ParseException {
 
-		final String oldFormat = "dd.MM.yyyy";
-		final String newFormat = "yyyy-MM-dd";
-		String dateNew;
-		SimpleDateFormat sdf = new SimpleDateFormat(oldFormat);
-		Date d = sdf.parse(strOld);
-		sdf.applyPattern(newFormat);
-		dateNew = sdf.format(d);
-		java.sql.Date res = java.sql.Date.valueOf(dateNew);
-		
-		return res;
+		final String oldDateFormat = "dd.MM.yyyy";
+		final String newDateFormat = "yyyy-MM-dd";
+		String newDate;
+		SimpleDateFormat sdf = new SimpleDateFormat(oldDateFormat);
+		java.util.Date d = sdf.parse(oldDate);
+		sdf.applyPattern(newDateFormat);
+		newDate = sdf.format(d);
+		java.sql.Date newDateSQLFormat = java.sql.Date.valueOf(newDate);
+
+		return newDateSQLFormat;
 
 	}
 
@@ -71,6 +74,7 @@ public class SQLTableParser {
 	 *            File with PW
 	 * @return PW as String
 	 * @throws IOException
+	 *             if reading from file fails
 	 */
 	public static String readPW(File f) throws IOException {
 
@@ -83,5 +87,21 @@ public class SQLTableParser {
 
 		br.close();
 		return str;
+	}
+
+	/**
+	 * Create a current DateFormat an converts it to a SQL Timestamp.
+	 * 
+	 * @return Current timestamp like yyyy-MM-dd hh:mm:ss
+	 * @throws SQLException
+	 *             If input is invalid for database.
+	 */
+	public static Timestamp createCurrentTimestamp() throws SQLException {
+
+		SimpleDateFormat sdf = new SimpleDateFormat("yyyy-MM-dd hh:mm:ss");
+		Calendar cal = Calendar.getInstance();
+		Timestamp currentTime = Timestamp.valueOf(sdf.format(cal.getTime()));
+
+		return currentTime;
 	}
 }

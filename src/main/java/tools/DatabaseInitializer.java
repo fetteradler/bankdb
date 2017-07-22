@@ -4,55 +4,54 @@ import java.io.File;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
+import java.sql.ResultSet;
 import java.sql.SQLException;
+import java.sql.Statement;
 import java.util.ArrayList;
 
 /**
- * Connect MySQL database to programm
+ * Connect MySQL database to programm. Delete and create tables.
  * 
  * @author caro
  *
  */
-public class DatabaseInitializer {
+public abstract class DatabaseInitializer {
 
 	public static final String DB = "bankdb";
-
-	public static final String URL = "localhost";
-
+	private static final String URL = "localhost";
 	public static final String USR = "root";
-	
 	public static final String PW = "";
 
 	/**
-	 * Prepare connection to database
+	 * Establish connection to database
 	 * 
 	 * @return Connection to database
 	 * @throws SQLException
+	 *             Error while accessing database.
 	 */
-	public static Connection conectToDatabase() throws SQLException {
+	public static Connection connectToDatabase() throws SQLException {
 
-		Connection connection = DriverManager.getConnection("jdbc:mysql://localhost:3306/" + DB, USR, PW);
-		return connection;
-
+		return DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/" + DB, USR, PW);
 	}
 
 	/**
-	 * Create tables in database
+	 * Set up empty database. Create tables in database.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws IOException
-	 *             if reading fails
-	 * @throws SQLException 
+	 *             If reading fails.
+	 * @throws SQLException
+	 *             If creating the table failed.
 	 */
 	public static void createTables(Connection con) throws IOException, SQLException {
 
-		// loesche alle bisher bestehenden Tabellen
+		// deletes all existing tables
 		deleteAllTables(con);
 
 		File f = new File("lib" + File.separator + "database" + File.separator + "datenbanktabellen.sql");
 		ArrayList<String> list = SQLTableParser.readSQLFile(f);
-		
+
 		for (String s : list) {
 			con.createStatement().executeUpdate(s);
 		}
@@ -62,28 +61,38 @@ public class DatabaseInitializer {
 	 * Delete a table from database.
 	 * 
 	 * @param con
+	 *            Connection to database.
 	 * @throws SQLException
+	 *             if SQL statement is invalid.
 	 */
-	public static void deleteTable(Connection con, String tableName) throws SQLException {
+	private static void deleteTable(Connection con, String tableName) throws SQLException {
 
 		con.createStatement().executeUpdate("DROP TABLE IF EXISTS " + tableName);
 	}
 
 	/**
 	 * Delete all tables from database.
+	 * 
 	 * @param con
+	 *            Connection to database.
 	 * @throws SQLException
+	 *             If table name is invalid.
 	 */
-	public static void deleteAllTables(Connection con) throws SQLException {
+	private static void deleteAllTables(Connection con) throws SQLException {
 
-		String[] tables = { "Angestellter_Sparbuch", "Angestellter_Girokonto", "Angestellter_Kreditkarte",
-				"Angestellter_Kredit", "Angestellter_Kunde", "Girokonto_Kredit", "Girokonto_Kreditkarte",
-				"Filialleiter_Angestellter", "Kunde_Kredit", "Kunde_Kreditkarte", "Kunde_Girokonto", "Kunde_Sparbuch",
-				"Kredit", "Kreditkartenkonto", "Girokonto", "Sparbuch", "Kunde", "Filialleiter", "Angestellter" };
-	
-		for(String table : tables) {
-			deleteTable(con, table);
-		};
+		Statement stmt1 = con.createStatement();
+		stmt1.execute("SET FOREIGN_KEY_CHECKS=0");
+		stmt1.close();
+		
+		ResultSet tableNames = con.getMetaData().getTables(con.getCatalog(), null, null, null);
+		
+		while(tableNames.next()) {
+			deleteTable(con, tableNames.getString(3));
+		}
+		
+		Statement stmt2 = con.createStatement();
+		stmt2.execute("SET FOREIGN_KEY_CHECKS=1");
+		stmt2.close();
 	}
-	
+
 }

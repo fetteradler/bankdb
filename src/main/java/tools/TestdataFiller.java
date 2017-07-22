@@ -2,11 +2,9 @@ package tools;
 
 import java.io.BufferedReader;
 import java.io.File;
-import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
-import java.sql.Date;
 import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
@@ -21,7 +19,7 @@ import tools.EnumParser.titel;
  * @author caro
  *
  */
-public class TestdataFiller {
+public abstract class TestdataFiller {
 
 	/**
 	 * Fill table 'Angestellter' with testdata
@@ -29,43 +27,36 @@ public class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws FileNotFoundException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	public void insertAngestellten(Connection con) throws SQLException, FileNotFoundException, ParseException {
+	public static void insertAngestellten(Connection con) throws SQLException, ParseException, IOException {
 
-		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
+		File file = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
 
 		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-		String temp = "";
-		String[] s = null;
+		String fileRow;
+		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
 				"INSERT INTO Angestellter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
+			while ((fileRow = br.readLine()) != null) {
 
-				s = temp.split(split);
+				s = fileRow.split(split);
 
-				if (s[15].equals("Fillialleiter")) {
-					continue;
-				} else {
-					SQLTableParser tp = new SQLTableParser();
+				if (!s[15].equals("Fillialleiter")) {
 
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
+					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -80,10 +71,10 @@ public class TestdataFiller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
+					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
 					ps.setInt(13, Integer.parseInt(s[12]));
 					if (s[13] == null) {
-						ps.setDate(14, (Date) tp.convertingDateFormat(s[13]));
+						ps.setDate(14, SQLTableParser.convertingDateFormat(s[13]));
 					} else {
 						ps.setDate(14, null);
 					}
@@ -105,6 +96,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Angestellten Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -113,41 +105,36 @@ public class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws FileNotFoundException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	public void insertFilialleiter(Connection con) throws SQLException, FileNotFoundException, ParseException {
+	public static void insertFilialleiter(Connection con) throws SQLException, ParseException, IOException {
 
-		File f = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
+		File file = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
 
 		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-		String temp = "";
-		String[] s = null;
+		String fileRow;
+		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
 				"INSERT INTO Filialleiter(leiterId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
+			while ((fileRow = br.readLine()) != null) {
 
-				s = temp.split(split);
+				s = fileRow.split(split);
 
 				if (s[15].equals("Fillialleiter")) {
-					SQLTableParser tp = new SQLTableParser();
 
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
+					ps.setDate(4,  SQLTableParser.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -162,10 +149,10 @@ public class TestdataFiller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
+					ps.setDate(12,  SQLTableParser.convertingDateFormat(s[11]));
 					ps.setInt(13, Integer.parseInt(s[12]));
 					if (s[13] == null) {
-						ps.setDate(14, (Date) tp.convertingDateFormat(s[13]));
+						ps.setDate(14,  SQLTableParser.convertingDateFormat(s[13]));
 					} else {
 						ps.setDate(14, null);
 					}
@@ -189,6 +176,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Filialleiter Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -197,23 +185,19 @@ public class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws FileNotFoundException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	public void insertKunden(Connection con) throws SQLException, FileNotFoundException, ParseException {
+	public static void insertKunden(Connection con) throws SQLException, ParseException, IOException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
 		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-		String temp = "";
+		String fileRow = "";
 		String[] s = null;
 		String split = ":";
 
@@ -221,11 +205,9 @@ public class TestdataFiller {
 				"INSERT INTO Kunde(kundeId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, aufnahmeDatum, kontoStatus, kreditBerecht) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
+			while ((fileRow = br.readLine()) != null) {
 
-				s = temp.split(split);
-
-				SQLTableParser tp = new SQLTableParser();
+				s = fileRow.split(split);
 
 				if (s[0].equals("")) {
 					continue;
@@ -233,7 +215,7 @@ public class TestdataFiller {
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4, (Date) tp.convertingDateFormat(s[3]));
+					ps.setDate(4,  SQLTableParser.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -248,7 +230,7 @@ public class TestdataFiller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12, (Date) tp.convertingDateFormat(s[11]));
+					ps.setDate(12,  SQLTableParser.convertingDateFormat(s[11]));
 
 					String statusEnum = s[12].trim();
 					if (statusEnum.equals("STANDARTKONTO")) {
@@ -277,6 +259,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunden Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -284,31 +267,26 @@ public class TestdataFiller {
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws FileNotFoundException
 	 * @throws SQLException
+	 * @throws IOException 
 	 */
-	public void insertGirokonto(Connection con) throws FileNotFoundException, SQLException {
+	public static void insertGirokonto(Connection con) throws SQLException, IOException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Girokonto.csv");
 
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
-		PreparedStatement ps = con.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebueren) VALUES (?,?,?)");
+		PreparedStatement ps = con.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebuehren) VALUES (?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
-				s = temp.split(split);
+			while ((fileRow = br.readLine()) != null) {
+				s = fileRow.split(split);
 
 				ps.setInt(1, Integer.parseInt(s[0]));
 				ps.setInt(2, Integer.parseInt(s[1]));
@@ -324,6 +302,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Girokonto Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -331,31 +310,26 @@ public class TestdataFiller {
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws FileNotFoundException
 	 * @throws SQLException
+	 * @throws IOException 
 	 */
-	public void insertSparbuch(Connection con) throws FileNotFoundException, SQLException {
+	public static void insertSparbuch(Connection con) throws SQLException, IOException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Sparbuch.csv");
 
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO Sparbuch(sparId, guthaben, zinsen) VALUES (?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
-				s = temp.split(split);
+			while ((fileRow = br.readLine()) != null) {
+				s = fileRow.split(split);
 
 				ps.setInt(1, Integer.parseInt(s[0]));
 				ps.setInt(2, Integer.parseInt(s[1]));
@@ -367,6 +341,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Sparbuch Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -374,23 +349,18 @@ public class TestdataFiller {
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws FileNotFoundException
 	 * @throws SQLException
+	 * @throws IOException 
 	 */
-	public void insertKreditkarte(Connection con) throws FileNotFoundException, SQLException {
+	public static void insertKreditkarte(Connection con) throws SQLException, IOException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kreditkarte.csv");
 
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-			e1.printStackTrace();
-		}
-
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
@@ -398,8 +368,8 @@ public class TestdataFiller {
 				.prepareStatement("INSERT INTO Kreditkartenkonto(kreditkarteId, betrag, zinsen) VALUES (?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
-				s = temp.split(split);
+			while ((fileRow = br.readLine()) != null) {
+				s = fileRow.split(split);
 
 				ps.setInt(1, Integer.parseInt(s[0]));
 				ps.setInt(2, Integer.parseInt(s[1]));
@@ -415,6 +385,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kreditkarte Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -422,26 +393,19 @@ public class TestdataFiller {
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws FileNotFoundException
 	 * @throws SQLException
 	 * @throws ParseException
+	 * @throws IOException 
 	 */
-	public void insertKredit(Connection con) throws FileNotFoundException, SQLException, ParseException {
+	public static void insertKredit(Connection con) throws SQLException, ParseException, IOException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kredit.csv");
 
-		SQLTableParser tp = new SQLTableParser();
+		BufferedReader br = new BufferedReader(new FileReader(file));
+		br.readLine();
 
-		BufferedReader br = new BufferedReader(new FileReader(f));
-		try {
-			br.readLine();
-		} catch (IOException e1) {
-
-			e1.printStackTrace();
-		}
-
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
@@ -449,14 +413,14 @@ public class TestdataFiller {
 				.prepareStatement("INSERT INTO Kredit(kreditId, betrag, zinsen, raten, laufzeit) VALUES (?,?,?,?,?)");
 
 		try {
-			while ((temp = br.readLine()) != null) {
-				s = temp.split(split);
+			while ((fileRow = br.readLine()) != null) {
+				s = fileRow.split(split);
 
 				ps.setInt(1, Integer.parseInt(s[0]));
 				ps.setInt(2, Integer.parseInt(s[1]));
 				ps.setInt(3, Integer.parseInt(s[2]));
 				ps.setInt(4, Integer.parseInt(s[3]));
-				ps.setDate(5, (Date) tp.convertingDateFormat(s[4]));
+				ps.setDate(5,  SQLTableParser.convertingDateFormat(s[4]));
 				ps.executeUpdate();
 			}
 		} catch (IOException e) {
@@ -464,6 +428,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kredit Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -474,24 +439,23 @@ public class TestdataFiller {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void insertKundeSparbuch(Connection con) throws IOException, SQLException {
+	public static void insertKundeSparbuch(Connection con) throws IOException, SQLException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
-		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO Kunde_Sparbuch(sparId, kundeId) VALUES (?,?)");
 
-		while ((temp = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
-			s = temp.split(split);
+			s = fileRow.split(split);
 
 			if (s.length <= 16) {
 				continue;
@@ -507,6 +471,7 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunde_Sparbuch Erfolgreich hinzugefuegt.");
+		br.close();
 	}
 
 	/**
@@ -517,28 +482,27 @@ public class TestdataFiller {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void insertKundeGirokonto(Connection con) throws IOException, SQLException {
+	public static void insertKundeGirokonto(Connection con) throws IOException, SQLException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
-		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO Kunde_Girokonto(giroId, kundeId) VALUES (?,?)");
 
-		s = temp.split(split);
+		s = fileRow.split(split);
 
-		while ((temp = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
 			String personId = s[0];
 
-			s = temp.split(split);
+			s = fileRow.split(split);
 			if (s.length <= 15) {
 				continue;
 			} else if (s[0].equals("")) {
@@ -556,8 +520,9 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunde_Girokonto Erfolgreich hinzugefuegt.");
+		br.close();
 	}
-	
+
 	/**
 	 * Fill table 'Kunde_Kreditkarte' with testdata
 	 * 
@@ -566,25 +531,24 @@ public class TestdataFiller {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void insertKundeKreditkarte(Connection con) throws IOException, SQLException {
-		
-		File f = new File(
+	public static void insertKundeKreditkarte(Connection con) throws IOException, SQLException {
+
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
-		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
-		PreparedStatement ps = con.prepareStatement("INSERT INTO Kunde_Kreditkarte(kreditkarteId, kundeId) VALUES (?,?)");
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO Kunde_Kreditkarte(kreditkarteId, kundeId) VALUES (?,?)");
 
+		while ((fileRow = br.readLine()) != null) {
 
-		while ((temp = br.readLine()) != null) {
-
-			s = temp.split(split);
+			s = fileRow.split(split);
 
 			if (s.length <= 17) {
 				continue;
@@ -600,8 +564,9 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunde_Kreditkarte Erfolgreich hinzugefuegt.");
+		br.close();
 	}
-	
+
 	/**
 	 * Fill table 'Kunde_Kredit' with testdata
 	 * 
@@ -610,28 +575,27 @@ public class TestdataFiller {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void insertKundeKredit(Connection con) throws IOException, SQLException {
-		
-		File f = new File(
+	public static void insertKundeKredit(Connection con) throws IOException, SQLException {
+
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
-		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO Kunde_Kredit(kreditId, kundeId) VALUES (?,?)");
 
-		s = temp.split(split);
+		s = fileRow.split(split);
 
-		while ((temp = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
 			String personId = s[0];
 
-			s = temp.split(split);
+			s = fileRow.split(split);
 			if (s.length <= 18) {
 				continue;
 			} else if (s[0].equals("")) {
@@ -649,8 +613,9 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Kunde_Kredit Erfolgreich hinzugefuegt.");
+		br.close();
 	}
-	
+
 	/**
 	 * Fill table 'Angestellter_Kunde' with testdata
 	 * 
@@ -659,25 +624,25 @@ public class TestdataFiller {
 	 * @throws IOException
 	 * @throws SQLException
 	 */
-	public void insertAngestellterKunde(Connection con) throws IOException, SQLException {
+	public static void insertAngestellterKunde(Connection con) throws IOException, SQLException {
 
-		File f = new File(
+		File file = new File(
 				"lib" + File.separator + "database" + File.separator + "testdata" + File.separator + "Kunden3.csv");
 
-		@SuppressWarnings("resource")
-		BufferedReader br = new BufferedReader(new FileReader(f));
+		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
-		String temp = "";
+		String fileRow = "";
 		String[] s;
 		String split = ":";
 
-		PreparedStatement ps = con.prepareStatement("INSERT INTO Angestellter_Kunde(kundeId, angestelltId) VALUES (?,?)");
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO Angestellter_Kunde(kundeId, angestelltId) VALUES (?,?)");
 
-		while ((temp = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
-			s = temp.split(split);
-			
+			s = fileRow.split(split);
+
 			if (s[0].equals("")) {
 				continue;
 			} else {
@@ -688,6 +653,22 @@ public class TestdataFiller {
 		}
 
 		System.out.println("Angestellter_Kunde Erfolgreich hinzugefuegt.");
+		br.close();
+	}
+	
+	public static void fillAllTestdata(Connection con) throws SQLException, ParseException, IOException {
 
+		TestdataFiller.insertAngestellten(con);
+		TestdataFiller.insertFilialleiter(con);
+		TestdataFiller.insertKunden(con);
+		TestdataFiller.insertGirokonto(con);
+		TestdataFiller.insertSparbuch(con);
+		TestdataFiller.insertKreditkarte(con);
+		TestdataFiller.insertKredit(con);
+		TestdataFiller.insertKundeSparbuch(con);
+		TestdataFiller.insertKundeGirokonto(con);
+		TestdataFiller.insertKundeKreditkarte(con);
+		TestdataFiller.insertKundeKredit(con);
+		TestdataFiller.insertAngestellterKunde(con);
 	}
 }
