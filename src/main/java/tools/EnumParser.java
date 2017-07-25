@@ -1,24 +1,39 @@
 package tools;
 
-// Dokumentation! Wofür überhaupt die Klasse?
-class EnumParser {
+/**
+ * Create different typs of enum
+ * @author caro
+ *
+ */
+public class EnumParser {
 
+	/**
+	 * Enum for 'titel' of a person.
+	 * @author caro
+	 *
+	 */
 	public enum titel {
 		
 		HERR, FRAU
 	}
 	
-	// titelString, statusString und kontoStatusString werden nie verwendet.
-	
+	/**
+	 * Enum for 'status' of a person.
+	 * @author caro
+	 *
+	 */
 	public enum status {
 		
 		VERFUEGBAR, KRANK, BEURLAUBT;
 	}
 
+	/**
+	 * Enum for 'kontoStatus' of a person.
+	 * @author caro
+	 *
+	 */
 	public enum kontoStatus {
 		
 		STANDARTKONTO, JUGENDKONTO, STUDENTENKONTO;
 	}
-	
-
 }

@@ -11,9 +11,13 @@ Bank.iml
 .idea/
 =======
 */**/*.class
+<<<<<<< HEAD
 +target/
 +
 +# IntelliJ
 +Bank.iml
 +.idea/
 >>>>>>> [feature]Edit gitignore.
+=======
+/target/
+>>>>>>> Save
