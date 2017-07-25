@@ -20,7 +20,7 @@ public abstract class DatabaseInitializer {
 	public static final String DB = "bankdb";
 	private static final String URL = "localhost";
 	public static final String USR = "root";
-	public static final String PW = "";
+	public static final String PW = "octopus44";
 
 	/**
 	 * Establish connection to database

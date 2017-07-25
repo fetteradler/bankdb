@@ -1,13 +1,11 @@
 package starter;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 import tools.ConsoleInterface;
 import tools.DatabaseInitializer;
-import tools.TestdataFiller;
 
 /**
  * Main of the program.
@@ -26,13 +24,12 @@ public class SimulationStarter {
 		//MitarbeiterUse mu = new MitarbeiterUse();
 		try {
 			con = DatabaseInitializer.connectToDatabase();
-			DatabaseInitializer.createTables(con);
-			TestdataFiller.fillAllTestdata(con);
+			System.out.println("----- Herzlich wilkommen bei Bankdb ----- \n");
+			//DatabaseInitializer.createTables(con);
+			//TestdataFiller.fillAllTestdata(con);
 			ConsoleInterface ci = new ConsoleInterface();
 			ci.anmeldung();
 			con.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
