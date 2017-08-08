@@ -1,11 +1,13 @@
 package starter;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.SQLException;
 import java.text.ParseException;
 
 import tools.ConsoleInterface;
-import tools.DatabaseInitializer;
+import tools.TestdataFiller;
+import tools.database.DatabaseInitializer;
 
 /**
  * Main of the program. Starts the software.
@@ -27,24 +29,50 @@ public class SimulationStarter {
 	 */
 	public static void main(String[] args) throws ParseException {
 
+		String myEnv = System.getenv("DELETE_DB_ON_STARTUP");
+		System.out.println(myEnv);
+		
+		Connection con = null;
+		
+		try {
+			con = DatabaseInitializer.connectToDatabase();
+			if (myEnv.equals("TRUE")) {
+				 DatabaseInitializer.createTables(con);
+				 TestdataFiller.fillAllTestdata(con);
+			}
+		} catch (SQLException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		
+		
 		// Scanner scanner = new Scanner(System.in);
 		System.out.println("Erstelle Datenbank...");
 
-		Connection con = null;
+		
 		// MitarbeiterUse mu = new MitarbeiterUse();
 		try {
-			con = DatabaseInitializer.connectToDatabase();
+			
 			System.out.println("----- Herzlich wilkommen bei Bankdb ----- \n");
-			// DatabaseInitializer.createTables(con);
-			// TestdataFiller.fillAllTestdata(con);
+
 			ConsoleInterface ci = new ConsoleInterface();
-			ci.anmeldung();
+			//Authentifikation auth = ci.anmeldung();
+			
+			boolean wantToExit = false;
+			
+			while(!wantToExit) {
+				//wantToExit = ci.openMenuForCertainRole(auth);
+			}
+			
 			con.close();
 
 		} catch (SQLException e) {
 			e.printStackTrace();
 		}
 
-		System.out.println("Program beendet");
+		System.out.println("Programm beendet");
 	}
 }

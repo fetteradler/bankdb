@@ -1,5 +1,6 @@
 package application;
 
+import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -7,9 +8,12 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.text.ParseException;
+import java.util.ArrayList;
 
 import tools.EnumParser.kontoStatus;
-import tools.SQLTableParser;
+import tools.database.DatabaseInitializer;
+import tools.database.SQLTableParser;
+import tools.ConsoleInterface;
 
 /**
  * Implements generally features for all users.
@@ -18,6 +22,96 @@ import tools.SQLTableParser;
  *
  */
 public class GenerallyUse {
+
+	/**
+	 * Checks if the insert Id is contain in database.
+	 * @param id ID of the user.
+	 * @param kind Kind of the 'anmeldung'
+	 */
+	public void checkId(int id, int kind) {
+
+		Connection con = null;
+		
+		try {
+			con = DatabaseInitializer.connectToDatabase();
+			try {
+				DatabaseInitializer.createTables(con);
+			} catch (IOException e) {
+				System.out.println("Falsche Eingabe: " + e + "\nBitte versuchen Sie es erneut: ");
+			}
+		} catch (SQLException e) {
+			System.out.println("Falsche Eingabe: " + e + "\nBitte versuchen Sie es erneut: ");
+			//e.printStackTrace();
+		}
+		String select = "";
+		ArrayList<Integer> allId = new ArrayList<Integer>();
+		if (kind == 1) {
+			select = "SELECT angestelltId FROM Angestellter";
+			try {
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(select);
+				while (rs.next()) {
+					allId.add(rs.getInt("angestelltId"));
+					System.out.println(allId);
+				}
+				if (allId.contains(id)) {
+					System.out.println("Wie möchten Sie als nächstes vorgehen?");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.mitarbeiterScreen();
+				} else {
+					System.out.println("Falsche Eingabe! " + id + " Ist keine gültige ID.");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.anmeldung();
+				}
+
+			} catch (SQLException e) {
+				System.out.println("Falsche Eingabe! " + id + " Ist keine gültige ID.");
+			}
+		}
+		if (kind == 2) {
+			select = "SELECT kundeId FROM Kunde";
+			try {
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(select);
+				while (rs.next()) {
+					allId.add(rs.getInt("kundeId"));
+				}
+				if (allId.contains(id)) {
+					System.out.println("Wie möchten Sie als nächstes vorgehen?");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.kundeScreen();
+				} else {
+					System.out.println("Falsche Eingabe! " + id + " Ist keine gürltige ID.");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.anmeldung();
+				}
+			} catch (SQLException e) {
+				System.out.println("Falsche Eingabe! " + id + " Ist keine gürltige ID.");
+			}
+		}
+			
+		if (kind == 3) {
+			select = "SELECT leiterId FROM Filialleiter";
+			try {
+				Statement stmt = con.createStatement();
+				ResultSet rs = stmt.executeQuery(select);
+				while (rs.next()) {
+					allId.add(rs.getInt("leiterId"));
+				}
+				if (allId.contains(id)) {
+					System.out.println("Wie möchten Sie als nächstes vorgehen?");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.filialleiterScreen();
+				} else {
+					System.out.println("Falsche Eingabe! " + id + " Ist keine gürltige ID.");
+					ConsoleInterface ci = new ConsoleInterface();
+					ci.anmeldung();
+				}
+			} catch (SQLException e) {
+				System.out.println("Falsche Eingabe! " + id + " Ist keine gürltige ID.");
+			}
+		}
+	}
 
 	/**
 	 * Select everything from a chosen 'Konto' in the database via 'kundeId'.

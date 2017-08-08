@@ -2,6 +2,7 @@ package tools;
 
 import java.io.BufferedReader;
 import java.io.File;
+import java.io.FileNotFoundException;
 import java.io.FileReader;
 import java.io.IOException;
 import java.sql.Connection;
@@ -12,6 +13,7 @@ import java.text.ParseException;
 import tools.EnumParser.kontoStatus;
 import tools.EnumParser.status;
 import tools.EnumParser.titel;
+import tools.database.SQLTableParser;
 
 /**
  * Fill database with testdata from CSV files.
@@ -33,13 +35,23 @@ public abstract class TestdataFiller {
 	 * @throws ParseException
 	 * @throws IOException 
 	 */
-	public static void insertAngestellten(Connection con) throws SQLException, ParseException, IOException {
+	public static void insertAngestellten(Connection con) throws SQLException, ParseException {
 
 		file = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
 
-		BufferedReader br = new BufferedReader(new FileReader(file));
-		br.readLine();
+		BufferedReader br = null;
+		try {
+			br = new BufferedReader(new FileReader(file));
+			br.readLine();
+		} catch (FileNotFoundException e1) {
+			// TODO Auto-generated catch block
+			e1.printStackTrace();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+
 
 		String fileRow;
 		String[] s;
@@ -47,7 +59,7 @@ public abstract class TestdataFiller {
 
 		PreparedStatement ps = con.prepareStatement(
 				"INSERT INTO Angestellter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-
+		
 		try {
 			while ((fileRow = br.readLine()) != null) {
 
@@ -93,12 +105,19 @@ public abstract class TestdataFiller {
 				}
 				ps.executeUpdate();
 			}
+
 		} catch (IOException e) {
 			e.printStackTrace();
+		} finally {
+			try {
+				br.close();
+			} catch (IOException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 		}
 
-		System.out.println("Angestellten Erfolgreich hinzugefuegt.");
-		br.close();
+		System.out.println("Angestellten erfolgreich hinzugefuegt.");
 	}
 
 	/**

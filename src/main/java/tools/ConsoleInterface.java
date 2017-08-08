@@ -9,6 +9,8 @@ import java.util.Scanner;
 
 import application.GenerallyUse;
 import application.MitarbeiterUse;
+import tools.database.DatabaseInitializer;
+import tools.database.SQLTableParser;
 
 /**
  * User navigation through the program. Input via console.
@@ -32,33 +34,36 @@ public class ConsoleInterface {
 		System.out.println("1 - Anmeldung Mitarbeiter \n" + "2 - Anmeldung Kunde \n" + "3 - Anmeldung Filialleiter \n"
 				+ "0 - Beenden");
 
-		int i = 0;
-		while (i == 0) {
-			int input = Integer.parseInt(scanner.next());
+		boolean requestingValidUserInput = true;
+		while (requestingValidUserInput) {
+			int input = -1;
+			try {
+				input = Integer.parseInt(scanner.next());
+			} catch (NumberFormatException e) {
+				// Catches invalid user input and leads to default case.
+			}
+			requestingValidUserInput = false;
 			switch (input) {
-			case 1:
-				System.out.println("Anmeldung Mitarbeiter...");
-				i = 1;
-				System.out.println("Wie möchten Sie als nächstes vorgehen?");
-				break;
-			case 2:
-				System.out.println("Anmeldung Kunde...");
-				i = 1;
-				System.out.println("Wie möchten Sie als nächstes vorgehen?");
-				break;
-			case 3:
-				System.out.println("Anmeldung Filialleiter...");
-				i = 1;
-				filialleiterScreen();
-				break;
 			case 0:
 				System.out.println("Das Programm wird beendet...");
-				i = 1;
 				scanner.close();
 				break;
+			case 1:
+				System.out.println("Anmeldung Mitarbeiter... \n" + "Bitte geben Sie ihre ID ein: ");
+				mitarbeiterScreen();
+				break;
+			case 2:
+				System.out.println("Anmeldung Kunde... \n" + "Bitte geben Sie ihre ID ein: ");
+				kundeScreen();
+				break;
+			case 3:
+				System.out.println("Anmeldung Filialleiter... \n" + "Bitte geben Sie ihre ID ein: ");
+				filialleiterScreen();
+				break;
 			default:
+				requestingValidUserInput = true;
 				System.out.println(
-						"Entschuldigung aber Ihre Eingabe konnte nicht verarbeitet werden. \nBitte geben Sie Ihre Auswahl erneut ein: ");
+						"Entschuldigung, aber Ihre Eingabe konnte nicht verarbeitet werden. \nBitte geben Sie Ihre Auswahl erneut ein: ");
 				break;
 			}
 		}
@@ -69,7 +74,7 @@ public class ConsoleInterface {
 	 * Menu for 'Filialleiter'. They can chose what they want to do an navigate
 	 * via console input.
 	 */
-	private void filialleiterScreen() {
+	public void filialleiterScreen() {
 
 		System.out.println("Wie möchten Sie als nächstes vorgehen? \n" + "1 - Datenbank neue Initialisieren \n"
 				+ "9 - Abmelden \n" + "0 - Beenden");
@@ -137,7 +142,7 @@ public class ConsoleInterface {
 				i = 1;
 				break;
 			case 2:
-				System.out.println("Wie möchten Sie als nächstes vorgene? \n" + "1 - Hinzufügen Girokonto\n"
+				System.out.println("Wie möchten Sie als nächstes vorgehen? \n" + "1 - Hinzufügen Girokonto\n"
 						+ "2 - Hinzufügen Kreditkartenkonto\n" + "3 - Hinzufügen Sparbuch\n" + "9 - Abbrechen\n");
 				int j = 0;
 				while (j == 0) {
@@ -172,24 +177,21 @@ public class ConsoleInterface {
 				i = 1;
 				break;
 			case 4:
-				try {
-					addNewKunde();
-				} catch (ParseException e) {
-					e.printStackTrace();
-				} catch (IOException e) {
-					e.printStackTrace();
-				}
+				addNewKunde();
 				i = 1;
 				break;
 			case 5:
 				System.out.println("1 - Löschen eines Kunden \n" + "2 - Bearbeiten eine Kunden \n");
 				int select = Integer.parseInt(scanner.next());
-				if(select == 1) {
-				deleteKunde();
-				} else if(select == 2) {
-					editKunde();
+				if (select == 1) {
+					deleteKunde();
+				} else if (select == 2) {
+					System.out.println("Bitte geben Sie die ID des Kunden ein: ");
+					int kundeId = Integer.parseInt(scanner.next());
+					editKunde(kundeId);
 				} else {
-					System.out.println("Entschulden Sie, es ist ein Fehler unterlaufen. " + select + " ist keine gültige Eingabe.");
+					System.out.println("Entschulden Sie, es ist ein Fehler unterlaufen. " + select
+							+ " ist keine gültige Eingabe.");
 					mitarbeiterScreen();
 				}
 				i = 1;
@@ -214,18 +216,37 @@ public class ConsoleInterface {
 				break;
 			default:
 				System.out.println(
-						"Entschuldigung aber Ihre Eingabe konnte nicht verarbeitet werden. \nBitte geben Sie Ihre Auswahl erneut ein: ");
+						"Entschuldigung, aber Ihre Eingabe konnte nicht verarbeitet werden. \nBitte geben Sie Ihre Auswahl erneut ein: ");
 				break;
 			}
 		}
 	}
-	
+
 	/**
-	 * Menu for 'Kunde'. They can chose what they want to do an navigate
-	 * via console input.
+	 * Menu for 'Kunde'. They can chose what they want to do an navigate via
+	 * console input.
 	 */
 	public void kundeScreen() {
-		
+
+		System.out.println("--- Kunde ---");
+		System.out.println("Bitte geben Sie ihre ID ein:");
+		int kundeId = Integer.parseInt(scanner.next());
+		System.out.println("Was möchten Sie als nächstes tun? \n" + "1 - Profil anzeigen \n"
+				+ "2 - Profil bearbeiten \n" + "3 - Kontoübersicht \n" + "9 - Abmelden \n" + "0 - Beenden \n");
+
+		int i = 0;
+		while (i == 0) {
+			int entry = Integer.parseInt(scanner.next());
+			switch (entry) {
+
+			case 1:
+				break;
+			default:
+				System.out.println(
+						"Entschuldigung aber Ihre Eingabe konnte nicht verarbeitet werden. \nBitte geben Sie Ihre Auswahl erneut ein: ");
+				break;
+			}
+		}
 	}
 
 	/**
@@ -408,7 +429,7 @@ public class ConsoleInterface {
 	 * @throws IOException
 	 *             If the entry is invalid.
 	 */
-	public void addNewKunde() throws ParseException, IOException {
+	public void addNewKunde() {
 
 		MitarbeiterUse mu = new MitarbeiterUse();
 		Connection con = null;
@@ -422,7 +443,13 @@ public class ConsoleInterface {
 			String nachname = scanner.next();
 			System.out.println("Geburtsdatum");
 			String geb = scanner.next();
-			Date gebDatum = SQLTableParser.convertingDateFormat(geb);
+			Date gebDatum = null;
+			try {
+				gebDatum = SQLTableParser.convertingDateFormat(geb);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Telefon:");
 			String telNr = scanner.next();
 			System.out.println("Mail:");
@@ -438,15 +465,22 @@ public class ConsoleInterface {
 			System.out.println("Titel:");
 			String titelEnum = scanner.next().toUpperCase();
 			System.out.println("Aufnahmedatum:");
-			String autnahmeDatum = scanner.next();
-			Date aufnahme = SQLTableParser.convertingDateFormat(autnahmeDatum);
+			String aufnahmeDatum = scanner.next();
+			Date aufnahme = null;
+			try {
+				aufnahme = SQLTableParser.convertingDateFormat(aufnahmeDatum);
+			} catch (ParseException e) {
+				// TODO Auto-generated catch block
+				e.printStackTrace();
+			}
 			System.out.println("Kontostatus:");
 			String kontoStatusEnum = scanner.next().toUpperCase();
 			System.out.println("Kreditberechtigung:");
 			int kreditBerecht = Integer.parseInt(scanner.next());
 
 			mu.includeNewKunde(con, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titelEnum,
-					aufnahme, kontoStatusEnum, kreditBerecht);
+						aufnahme, kontoStatusEnum, kreditBerecht);
+
 
 			System.out.println("Kunde wurde erfolgreich hinzugefügt.");
 		} catch (SQLException e) {
@@ -560,9 +594,10 @@ public class ConsoleInterface {
 	}
 
 	/**
-	 * User can edit the attributes in database of a chosen 'Kunde'. Finde the 'Kunde' via 'kundeId'.
+	 * User can edit the attributes in database of a chosen 'Kunde'. Finde the
+	 * 'Kunde' via 'kundeId'.
 	 */
-	public void editKunde() {
+	public void editKunde(int kundeId) {
 
 		GenerallyUse gu = new GenerallyUse();
 		Connection con = null;
@@ -577,15 +612,16 @@ public class ConsoleInterface {
 			int i = 0;
 			while (i == 0) {
 				int auswahl = Integer.parseInt(scanner.next());
-				System.out.println("Bitte geben Sie die ID des Kunden ein: ");
-				int kundeId = Integer.parseInt(scanner.next());
-				if (auswahl == 1 || auswahl == 2 || auswahl == 3 || auswahl == 4 || auswahl == 5 || auswahl == 6 || auswahl == 7
-						|| auswahl == 8 || auswahl == 9 || auswahl == 10 || auswahl == 11) {
+				// System.out.println("Bitte geben Sie die ID des Kunden ein:
+				// ");
+				// int kundeId = Integer.parseInt(scanner.next());
+				if (auswahl == 1 || auswahl == 2 || auswahl == 3 || auswahl == 4 || auswahl == 5 || auswahl == 6
+						|| auswahl == 7 || auswahl == 8 || auswahl == 9 || auswahl == 10 || auswahl == 11) {
 					System.out.println("Bitte geben Sie das neue Attribut ein:");
 					String entryString = scanner.next();
 					i = 1;
 					gu.updateKunde(con, kundeId, entryString, auswahl);
-				} else if(auswahl == 0) {
+				} else if (auswahl == 0) {
 					System.out.println("Abmeldung erfolgt...");
 					i = 1;
 					anmeldung();

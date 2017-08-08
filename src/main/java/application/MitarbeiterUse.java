@@ -1,6 +1,5 @@
 package application;
 
-import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Date;
 import java.sql.PreparedStatement;
@@ -10,12 +9,13 @@ import java.sql.Statement;
 import java.text.ParseException;
 
 import tools.ConsoleInterface;
-import tools.SQLTableParser;
+import tools.database.SQLTableParser;
 
 /**
- * Implements the features for 'Mitarbeiter'. Dokumentation! Und versuche deine Klassen aussagekräftig zu benennen.
- * Wenn die Klasse einen Mitarbeiter präsentieren soll, nenne sie Mitarbeiter. Was soll denn der Unterschiedn zwischen MitarbeiterAllow und
- * MitarbeiterUse sein??
+ * Implements the features for 'Mitarbeiter'. Dokumentation! Und versuche deine
+ * Klassen aussagekräftig zu benennen. Wenn die Klasse einen Mitarbeiter
+ * präsentieren soll, nenne sie Mitarbeiter. Was soll denn der Unterschiedn
+ * zwischen MitarbeiterAllow und MitarbeiterUse sein??
  * 
  * @author caro
  *
@@ -263,7 +263,7 @@ public class MitarbeiterUse {
 		}
 
 		if (maxValueLength == 1) {
-			System.out.println("Ihre Suchanfrage ergab leider kein Erfolg. \n");
+			System.out.println("Ihre Suchanfrage war leider ohne Erfolg. \n");
 		} else {
 
 			rs.beforeFirst();
@@ -327,14 +327,10 @@ public class MitarbeiterUse {
 	 *            'kontoStatus' of the 'Kunde'.
 	 * @param kreditBerecht
 	 *            'kreditBerecht' of the 'Kunde'.
-	 * @throws ParseException
-	 *             If the converting of the date fails.
-	 * @throws IOException
-	 *             If the entry is invalid.
 	 */
 	public void includeNewKunde(Connection con, String vorname, String nachname, Date gebDatum, String telNr,
 			String mail, String wohnort, String strasse, String plz, String land, String titel, Date aufnahmeDatum,
-			String kontoStatus, int kreditBerecht) throws ParseException, IOException {
+			String kontoStatus, int kreditBerecht) {
 
 		try {
 			PreparedStatement ps = con.prepareStatement(
@@ -377,7 +373,9 @@ public class MitarbeiterUse {
 	public void deletChosenKunde(Connection con, int kundeId) {
 
 		try {
-			String delete = "DELETE FROM Kunde WHERE kundeId=" + kundeId;
+			String delete = "DELETE FROM Kunde WHERE kundeId=" + kundeId; // TODO
+																			// Prepared
+																			// Statement
 			Statement stmnt = con.createStatement();
 			stmnt.executeUpdate(delete);
 		} catch (SQLException e) {

@@ -1,4 +1,4 @@
-package tools;
+package tools.database;
 
 import java.io.File;
 import java.io.IOException;
@@ -20,7 +20,7 @@ public abstract class DatabaseInitializer {
 	private static final String DB = "bankdb";
 	private static final String URL = "localhost"; // wird nicht verwendet?
 	private static final String USR = "root";
-	private static final String PW = "";
+	private static final String PW = "octopus44";
 
 	/**
 	 * Establish connection to database
