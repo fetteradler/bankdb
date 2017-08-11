@@ -1,6 +1,8 @@
-package tools.database;
+package database.tools;
 
+import java.io.BufferedInputStream;
 import java.io.File;
+import java.io.FileInputStream;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.DriverManager;
@@ -8,6 +10,7 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.sql.Statement;
 import java.util.ArrayList;
+import java.util.Properties;
 
 /**
  * Connect MySQL database to programm. Delete and create tables.
@@ -17,19 +20,29 @@ import java.util.ArrayList;
  */
 public abstract class DatabaseInitializer {
 
-	private static final String DB = "bankdb";
-	private static final String URL = "localhost"; // wird nicht verwendet?
-	private static final String USR = "root";
-	private static final String PW = "octopus44";
-
 	/**
 	 * Establish connection to database
 	 * 
 	 * @return Connection to database
 	 * @throws SQLException
 	 *             Error while accessing database.
+	 * @throws IOException 
 	 */
 	public static Connection connectToDatabase() throws SQLException {
+		
+		Properties properties = new Properties();
+		try {
+			BufferedInputStream stream = new BufferedInputStream(new FileInputStream("logindata.properties"));
+			properties.load(stream);
+			stream.close();
+		} catch (IOException e) {
+			// TODO Auto-generated catch block
+			e.printStackTrace();
+		}
+		final String DB = properties.getProperty("DB");
+		final String URL = properties.getProperty("URL");
+		final String USR = properties.getProperty("USR");
+		final String PW = properties.getProperty("PW");
 
 		return DriverManager.getConnection("jdbc:mysql://" + URL + ":3306/" + DB, USR, PW);
 	}

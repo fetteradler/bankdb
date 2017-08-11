@@ -1,4 +1,4 @@
-package tools.database;
+package database.tools;
 
 import java.io.BufferedReader;
 import java.io.File;
@@ -52,7 +52,7 @@ public abstract class SQLTableParser {
 	 * @throws ParseException
 	 *             if parse from old format to new fails
 	 */
-	public static Date convertingDateFormat(String oldDate) throws ParseException {
+	public static Date convertingDateFormat (String oldDate) throws ParseException {
 
 		final String oldDateFormat = "dd.MM.yyyy";
 		final String newDateFormat = "yyyy-MM-dd";
@@ -65,28 +65,6 @@ public abstract class SQLTableParser {
 
 		return newDateSQLFormat;
 
-	}
-
-	/**
-	 * Reads PW from file
-	 * 
-	 * @param f
-	 *            File with PW
-	 * @return PW as String
-	 * @throws IOException
-	 *             if reading from file fails
-	 */
-	public static String readPW(File f) throws IOException {
-
-		String str = "";
-		BufferedReader br = new BufferedReader(new FileReader(f));
-
-		while ((str = br.readLine()) != null) {
-			str = str.trim();
-		}
-
-		br.close();
-		return str;
 	}
 
 	/**

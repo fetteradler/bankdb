@@ -36,4 +36,14 @@ public class EnumParser {
 		
 		STANDARTKONTO, JUGENDKONTO, STUDENTENKONTO;
 	}
+	
+	/**
+	 * Enum to select as witch role want the user to login.
+	 * @author caro
+	 *
+	 */
+	public enum kindOfLogin {
+		
+		MITARBEITER, KUNDE, FILIALLEITER;
+	}
 }

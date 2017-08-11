@@ -10,10 +10,10 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 import java.text.ParseException;
 
+import database.tools.SQLTableParser;
 import tools.EnumParser.kontoStatus;
 import tools.EnumParser.status;
 import tools.EnumParser.titel;
-import tools.database.SQLTableParser;
 
 /**
  * Fill database with testdata from CSV files.
@@ -22,8 +22,8 @@ import tools.database.SQLTableParser;
  *
  */
 public abstract class TestdataFiller {
-	
-	//.csv-file with the data for the database.
+
+	// .csv-file with the data for the database.
 	private static File file;
 
 	/**
@@ -33,7 +33,7 @@ public abstract class TestdataFiller {
 	 *            Connection to database
 	 * @throws SQLException
 	 * @throws ParseException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertAngestellten(Connection con) throws SQLException, ParseException {
 
@@ -52,14 +52,13 @@ public abstract class TestdataFiller {
 			e.printStackTrace();
 		}
 
-
 		String fileRow;
 		String[] s;
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
 				"INSERT INTO Angestellter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
-		
+
 		try {
 			while ((fileRow = br.readLine()) != null) {
 
@@ -127,13 +126,13 @@ public abstract class TestdataFiller {
 	 *            Connection to database
 	 * @throws SQLException
 	 * @throws ParseException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertFilialleiter(Connection con) throws SQLException, ParseException, IOException {
 
 		file = new File("lib" + File.separator + "database" + File.separator + "testdata" + File.separator
 				+ "Mitarbeiter2.csv");
-		
+
 		BufferedReader br = new BufferedReader(new FileReader(file));
 		br.readLine();
 
@@ -154,7 +153,7 @@ public abstract class TestdataFiller {
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4,  SQLTableParser.convertingDateFormat(s[3]));
+					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -169,10 +168,10 @@ public abstract class TestdataFiller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12,  SQLTableParser.convertingDateFormat(s[11]));
+					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
 					ps.setInt(13, Integer.parseInt(s[12]));
 					if (s[13] == null) {
-						ps.setDate(14,  SQLTableParser.convertingDateFormat(s[13]));
+						ps.setDate(14, SQLTableParser.convertingDateFormat(s[13]));
 					} else {
 						ps.setDate(14, null);
 					}
@@ -206,7 +205,7 @@ public abstract class TestdataFiller {
 	 *            Connection to database
 	 * @throws SQLException
 	 * @throws ParseException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertKunden(Connection con) throws SQLException, ParseException, IOException {
 
@@ -221,8 +220,8 @@ public abstract class TestdataFiller {
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
-				"INSERT INTO Kunde(kundeId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, " +
-						"plz, land, titel, aufnahmeDatum, kontoStatus, kreditBerecht) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				"INSERT INTO Kunde(kundeId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, "
+						+ "plz, land, titel, aufnahmeDatum, kontoStatus, kreditBerecht) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
 			while ((fileRow = br.readLine()) != null) {
@@ -235,7 +234,7 @@ public abstract class TestdataFiller {
 					ps.setInt(1, Integer.parseInt(s[0]));
 					ps.setString(2, s[1]);
 					ps.setString(3, s[2]);
-					ps.setDate(4,  SQLTableParser.convertingDateFormat(s[3]));
+					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
 					ps.setString(5, s[4]);
 					ps.setString(6, s[5]);
 					ps.setString(7, s[6]);
@@ -250,7 +249,7 @@ public abstract class TestdataFiller {
 					} else {
 						throw new IOException();
 					}
-					ps.setDate(12,  SQLTableParser.convertingDateFormat(s[11]));
+					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
 
 					String statusEnum = s[12].trim();
 					if (statusEnum.equals("STANDARTKONTO")) {
@@ -289,7 +288,7 @@ public abstract class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertGirokonto(Connection con) throws SQLException, IOException {
 
@@ -303,7 +302,8 @@ public abstract class TestdataFiller {
 		String[] s;
 		String split = ":";
 
-		PreparedStatement ps = con.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebuehren) VALUES (?,?,?)");
+		PreparedStatement ps = con
+				.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebuehren) VALUES (?,?,?)");
 
 		try {
 			while ((fileRow = br.readLine()) != null) {
@@ -332,7 +332,7 @@ public abstract class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertSparbuch(Connection con) throws SQLException, IOException {
 
@@ -371,7 +371,7 @@ public abstract class TestdataFiller {
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertKreditkarte(Connection con) throws SQLException, IOException {
 
@@ -416,7 +416,7 @@ public abstract class TestdataFiller {
 	 *            Connection to database
 	 * @throws SQLException
 	 * @throws ParseException
-	 * @throws IOException 
+	 * @throws IOException
 	 */
 	public static void insertKredit(Connection con) throws SQLException, ParseException, IOException {
 
@@ -441,7 +441,7 @@ public abstract class TestdataFiller {
 				ps.setInt(2, Integer.parseInt(s[1]));
 				ps.setInt(3, Integer.parseInt(s[2]));
 				ps.setInt(4, Integer.parseInt(s[3]));
-				ps.setDate(5,  SQLTableParser.convertingDateFormat(s[4]));
+				ps.setDate(5, SQLTableParser.convertingDateFormat(s[4]));
 				ps.executeUpdate();
 			}
 		} catch (IOException e) {
@@ -589,13 +589,16 @@ public abstract class TestdataFiller {
 	}
 
 	/**
-	 * Fill table 'Kunde_Kredit' with testdata. insertKundeKredit klingt als wolltest du für einen Kunden einen Kredit erstellen.
-	 * Gilt für alle Methoden diese Klasse.
+	 * Fill table 'Kunde_Kredit' with testdata. insertKundeKredit klingt als
+	 * wolltest du für einen Kunden einen Kredit erstellen. Gilt für alle
+	 * Methoden diese Klasse.
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException Dokumentation!
-	 * @throws SQLException Dokumentation!
+	 * @throws IOException
+	 *             Dokumentation!
+	 * @throws SQLException
+	 *             Dokumentation!
 	 */
 	public static void insertKundeKredit(Connection con) throws IOException, SQLException {
 
@@ -642,8 +645,10 @@ public abstract class TestdataFiller {
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException Dokumentation!
-	 * @throws SQLException Dokumentation!
+	 * @throws IOException
+	 *             Dokumentation!
+	 * @throws SQLException
+	 *             Dokumentation!
 	 */
 	public static void insertAngestellterKunde(Connection con) throws IOException, SQLException {
 
@@ -676,7 +681,7 @@ public abstract class TestdataFiller {
 		System.out.println("Angestellter_Kunde Erfolgreich hinzugefuegt.");
 		br.close();
 	}
-	
+
 	public static void fillAllTestdata(Connection con) throws SQLException, ParseException, IOException {
 
 		TestdataFiller.insertAngestellten(con);
