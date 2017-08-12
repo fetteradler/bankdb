@@ -12,6 +12,13 @@ import java.text.SimpleDateFormat;
 import java.util.ArrayList;
 import java.util.Calendar;
 
+/**
+ * Read Strings from an external file and add it to ArrayList. Functions to
+ * parse entries to a SQL valid form.
+ * 
+ * @author CM
+ *
+ */
 public abstract class SQLTableParser {
 
 	/**
@@ -52,7 +59,7 @@ public abstract class SQLTableParser {
 	 * @throws ParseException
 	 *             if parse from old format to new fails
 	 */
-	public static Date convertingDateFormat (String oldDate) throws ParseException {
+	public static Date convertingDateFormat(String oldDate) throws ParseException {
 
 		final String oldDateFormat = "dd.MM.yyyy";
 		final String newDateFormat = "yyyy-MM-dd";

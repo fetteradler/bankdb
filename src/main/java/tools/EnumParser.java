@@ -2,7 +2,7 @@ package tools;
 
 /**
  * Create different typs of enum
- * @author caro
+ * @author CM
  *
  */
 public class EnumParser {
@@ -35,15 +35,5 @@ public class EnumParser {
 	public enum kontoStatus {
 		
 		STANDARTKONTO, JUGENDKONTO, STUDENTENKONTO;
-	}
-	
-	/**
-	 * Enum to select as witch role want the user to login.
-	 * @author caro
-	 *
-	 */
-	public enum kindOfLogin {
-		
-		MITARBEITER, KUNDE, FILIALLEITER;
 	}
 }

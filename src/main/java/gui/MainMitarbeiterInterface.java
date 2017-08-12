@@ -3,17 +3,25 @@ package gui;
 import java.sql.SQLException;
 import java.text.ParseException;
 
-import database.MitarbeiterAllow;
+import database.InsertOrDeleteKonto;
 import database.SelectKonto;
 import tools.AuthenticationCookie;
 import tools.LoginChecker;
 import tools.UserInputReader;
 
+/**
+ * Main menu interface of 'Mitarbeiter' with a summary of all actions the
+ * 'Mitarbeiter' can do.
+ * 
+ * @author CM
+ *
+ */
 public class MainMitarbeiterInterface {
 
 	/**
 	 * Main menu for 'Mitarbeiter'. They can chose what they want to do an
-	 * navigate via console input.
+	 * navigate via console input. First screen after a successful
+	 * authentication and always the user do 'Abbrechen'.
 	 * 
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
@@ -23,7 +31,7 @@ public class MainMitarbeiterInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		String mainMenuChoices = "Wie möchten Sie als nächstes vorgehen? \n1 - Kredit für einen bestehenden Kunden hinzufügen \n"
+		String mainMenuChoices = "Wie möchten Sie als nächstes vorgehen? \n\n1 - Kredit für einen bestehenden Kunden hinzufügen \n"
 				+ "2 - Konto für bestehenden Kunden hinzufügen \n3 - Anzeigen eines Kunden \n"
 				+ "4 - Neuen Kunden hinzufügen \n5 - Löschen oder bearbeiten eines Kunden \n"
 				+ "6 - Anzeigen eines Kontos \n7 - Löschen eines bestehenden Kontos \n" + "8 - Abmelden \n"
@@ -45,7 +53,7 @@ public class MainMitarbeiterInterface {
 			break;
 		case 4:
 			// addNewKunde(cookie);
-			MitarbeiterAddKundeInterface.addNewKunde(cookie);
+			AddInterface.addNewKunde(cookie);
 			break;
 		case 5:
 			editOrDeleteKunde(cookie);
@@ -73,7 +81,7 @@ public class MainMitarbeiterInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		MitarbeiterAllow ma = new MitarbeiterAllow();
+		InsertOrDeleteKonto ma = new InsertOrDeleteKonto();
 		String id = "Bewillige Kredit\nKunden-Id:";
 		String sum = "Betrag";
 		String zinsen = "Zinsen";
@@ -114,19 +122,19 @@ public class MainMitarbeiterInterface {
 		int input = UserInputReader.requestInteger(kontoChoices, new int[] { 1, 2, 3, 4 });
 		switch (input) {
 		case 1:
-			MitarbeiterAddKontoInterface.addGirokonto(cookie);
+			AddKontoInterface.addGirokonto(cookie);
 			break;
 		case 2:
-			MitarbeiterAddKontoInterface.addKreditkartenkonto(cookie);
+			AddKontoInterface.addKreditkartenkonto(cookie);
 			break;
 		case 3:
-			MitarbeiterAddKontoInterface.addSparbuch(cookie);
+			AddKontoInterface.addSparbuch(cookie);
 			break;
 		case 4:
 			MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
 			break;
 		}
-		
+
 		System.out.println();
 		mitarbeiterMainMenu(cookie);
 	}
@@ -150,16 +158,16 @@ public class MainMitarbeiterInterface {
 		int input = UserInputReader.requestInteger(kundeChoices, new int[] { 1, 2, 3, 4 });
 		switch (input) {
 		case 1:
-			MitarbeiterSelectKundeInterface.searchKundeId(cookie);
+			SearchKundeInterface.searchKundeId(cookie);
 			break;
 		case 2:
-			MitarbeiterSelectKundeInterface.searchKundeName(cookie);
+			SearchKundeInterface.searchKundeName(cookie);
 			break;
 		case 3:
 			MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
 			break;
 		}
-		
+
 		System.out.println();
 		mitarbeiterMainMenu(cookie);
 	}
@@ -182,7 +190,7 @@ public class MainMitarbeiterInterface {
 
 		switch (input5) {
 		case 1:
-			MitarbeiterEditInterface.deleteKunde(cookie);
+			DeleteKontoOrKundeInterface.deleteKunde(cookie);
 			break;
 		case 2:
 			String idChoices = "Bitte geben Sie die ID des zu bearbeitenden Kunden ein:";
@@ -193,7 +201,7 @@ public class MainMitarbeiterInterface {
 			mitarbeiterMainMenu(cookie);
 			break;
 		}
-		
+
 		System.out.println();
 		mitarbeiterMainMenu(cookie);
 	}
@@ -210,10 +218,10 @@ public class MainMitarbeiterInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		String kontoChoices = "Welche Art von Konto möchten Sie anzeigen?\n1 - Kredit\n2 - Girokonto\n3 - Kreditkartenkonto\n4 - Sparbuch\n5 - Abbrechen";
-		int input = UserInputReader.requestInteger(kontoChoices, new int[] { 1, 2, 3, 4, 5 });
 		String idChoices = "Bitte geben Sie die Kunden-ID ein: ";
 		int kundeId = UserInputReader.requestInteger(idChoices);
+		String kontoChoices = "Welche Art von Konto möchten Sie anzeigen?\n1 - Kredit\n2 - Girokonto\n3 - Kreditkartenkonto\n4 - Sparbuch\n5 - Abbrechen";
+		int input = UserInputReader.requestInteger(kontoChoices, new int[] { 1, 2, 3, 4, 5 });
 
 		SelectKonto sk = new SelectKonto();
 
@@ -239,7 +247,7 @@ public class MainMitarbeiterInterface {
 			System.out.println("Fehler in der Datenbank!" + e);
 			mitarbeiterMainMenu(cookie);
 		}
-		
+
 		System.out.println();
 		mitarbeiterMainMenu(cookie);
 	}
@@ -262,22 +270,22 @@ public class MainMitarbeiterInterface {
 
 		switch (input) {
 		case 1:
-			MitarbeiterEditInterface.deleteGirokonto(cookie);
+			DeleteKontoOrKundeInterface.deleteGirokonto(cookie);
 			break;
 		case 2:
-			MitarbeiterEditInterface.deleteKredit(cookie);
+			DeleteKontoOrKundeInterface.deleteKredit(cookie);
 			break;
 		case 3:
-			MitarbeiterEditInterface.deleteKreditkartenkonto(cookie);
+			DeleteKontoOrKundeInterface.deleteKreditkartenkonto(cookie);
 			break;
 		case 4:
-			MitarbeiterEditInterface.deleteSparbuch(cookie);
+			DeleteKontoOrKundeInterface.deleteSparbuch(cookie);
 			break;
 		case 5:
 			mitarbeiterMainMenu(cookie);
 			break;
 		}
-		
+
 		System.out.println();
 		mitarbeiterMainMenu(cookie);
 	}

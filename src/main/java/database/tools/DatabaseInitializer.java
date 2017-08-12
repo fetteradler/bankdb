@@ -13,9 +13,9 @@ import java.util.ArrayList;
 import java.util.Properties;
 
 /**
- * Connect MySQL database to programm. Delete and create tables.
+ * Connect MySQL database to program. Delete and create tables.
  * 
- * @author caro
+ * @author CM
  *
  */
 public abstract class DatabaseInitializer {
@@ -26,10 +26,9 @@ public abstract class DatabaseInitializer {
 	 * @return Connection to database
 	 * @throws SQLException
 	 *             Error while accessing database.
-	 * @throws IOException 
 	 */
 	public static Connection connectToDatabase() throws SQLException {
-		
+
 		Properties properties = new Properties();
 		try {
 			BufferedInputStream stream = new BufferedInputStream(new FileInputStream("logindata.properties"));
@@ -54,7 +53,8 @@ public abstract class DatabaseInitializer {
 	 *            Connection to database
 	 * @throws IOException
 	 *             if reading fails
-	 * @throws SQLException Dokumentation!
+	 * @throws SQLException
+	 *             If inserting testdata to database fails.
 	 */
 	public static void createTables(Connection con) throws IOException, SQLException {
 
@@ -96,13 +96,13 @@ public abstract class DatabaseInitializer {
 		Statement stmt1 = con.createStatement();
 		stmt1.execute("SET FOREIGN_KEY_CHECKS=0");
 		stmt1.close();
-		
+
 		ResultSet tableNames = con.getMetaData().getTables(con.getCatalog(), null, null, null);
-		
-		while(tableNames.next()) {
+
+		while (tableNames.next()) {
 			deleteTable(con, tableNames.getString(3));
 		}
-		
+
 		Statement stmt2 = con.createStatement();
 		stmt2.execute("SET FOREIGN_KEY_CHECKS=1");
 		stmt2.close();

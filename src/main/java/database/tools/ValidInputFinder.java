@@ -6,8 +6,25 @@ import java.sql.ResultSet;
 import java.sql.SQLException;
 import java.util.ArrayList;
 
+/**
+ * Find all Id's of a chosen table in database. Table will be selected by a
+ * 'roleId', to select the searching attribute, and a 'roleStatement', to select
+ * the SQL Statement.
+ * 
+ * @author CM
+ *
+ */
 public class ValidInputFinder {
 
+	/**
+	 * Search for all Id's of a selected table in databse.
+	 * 
+	 * @param roleId
+	 *            Name of the searching attribute.
+	 * @param roleStatement
+	 *            Select statement.
+	 * @return All Id's from chosen table in database.
+	 */
 	public static ArrayList<Integer> findAllIdInDatabase(String roleId, String roleStatement) {
 
 		Connection con = null;
@@ -32,6 +49,11 @@ public class ValidInputFinder {
 		return allId;
 	}
 
+	/**
+	 * Search for all Id's of 'Mitarbeiter'.
+	 * 
+	 * @return List of all Id's.
+	 */
 	public static ArrayList<Integer> findAllMitarbeiterId() {
 
 		String roleId = "angestelltId";
@@ -40,6 +62,11 @@ public class ValidInputFinder {
 		return allMitarbeiterId;
 	}
 
+	/**
+	 * Search for all Id's of 'Kunde'.
+	 * 
+	 * @return List of all Id's.
+	 */
 	public static ArrayList<Integer> findAllKundeId() {
 
 		String roleId = "kundeId";
@@ -49,6 +76,11 @@ public class ValidInputFinder {
 		return allKundeId;
 	}
 
+	/**
+	 * Search for all Id's of 'Filialleiter'.
+	 * 
+	 * @return List of all Id's.
+	 */
 	public static ArrayList<Integer> findAllFilialleiterId() {
 
 		String roleId = "leiterId";

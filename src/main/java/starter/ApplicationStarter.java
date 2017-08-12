@@ -15,7 +15,7 @@ import tools.UserInputReader;
 /**
  * Main of the program. Starts the software.
  * 
- * @author caro
+ * @author CM
  *
  */
 public class ApplicationStarter {
@@ -26,8 +26,6 @@ public class ApplicationStarter {
 	 * what to do next. After the user finished, connection to close.
 	 * 
 	 * @param args
-	 * @throws ParseException
-	 *             If the parsing of the entry of 'ConsoleInterface' fails.
 	 */
 	public static void main(String[] args) {
 
@@ -61,17 +59,8 @@ public class ApplicationStarter {
 				System.exit(1);
 			}
 		}
-
-		AuthenticationCookie cookie = LoginInterface.anmeldung();
-
 		
-		// TODO
-		boolean wantToExit = false;
-
-		while (!wantToExit) {
-			// Überprüfe ob Cookie noch gültig.
-			// wantToExit = ci.openMenuForCertainRole(auth);
-		}
+		AuthenticationCookie cookie = LoginInterface.anmeldung();
 
 		try {
 			con.close();

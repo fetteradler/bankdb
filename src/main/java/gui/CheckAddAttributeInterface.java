@@ -1,43 +1,21 @@
 package gui;
 
 import java.sql.Date;
-import java.sql.SQLException;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 
-import database.MitarbeiterEditDatabase;
 import database.tools.SQLTableParser;
 import tools.AuthenticationCookie;
 import tools.LoginChecker;
 import tools.UserInputReader;
 
-public class MitarbeiterAddKundeInterface {
-
-	/**
-	 * The 'Mitarbeiter' can create a new account for 'Kunde'.
-	 * 
-	 * @param cookie
-	 *            Authentication for the session. Check if session is still
-	 *            valid.
-	 */
-	public static void addNewKunde(AuthenticationCookie cookie) {
-
-		LoginChecker.logoutIfSessionExpired(cookie);
-
-		MitarbeiterEditDatabase med = new MitarbeiterEditDatabase();
-
-		try {
-			med.includeNewKunde(addVorname(cookie), addNachname(cookie), addGeburtsdatum(cookie), addTelephone(cookie),
-					addMail(cookie), addWohnort(cookie), addStrasse(cookie), addPLZ(cookie), addLand(cookie),
-					addTitel(cookie), addAufnahmedatum(cookie), addKontostatus(cookie), addKreditberechtigung(cookie));
-		} catch (SQLException e) {
-			System.out.println("Es ist ein Fehler aufgetreten. Kunde konnte nicht hinzugefügt werden.");
-			MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
-		}
-
-		System.out.println("Kunde wurde erfolgreich hinzugefügt.");
-		MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
-	}
+/**
+ * Check entries before insert them into database if they are valid.
+ * 
+ * @author CM
+ *
+ */
+public class CheckAddAttributeInterface {
 
 	/**
 	 * Checks if entry for 'Vorname' starts with an upper case letter.
@@ -45,6 +23,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addVorname(AuthenticationCookie cookie) {
 
@@ -67,6 +46,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addNachname(AuthenticationCookie cookie) {
 
@@ -90,6 +70,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static Date addGeburtsdatum(AuthenticationCookie cookie) {
 
@@ -123,6 +104,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addTelephone(AuthenticationCookie cookie) {
 
@@ -148,6 +130,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addMail(AuthenticationCookie cookie) {
 
@@ -171,6 +154,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addWohnort(AuthenticationCookie cookie) {
 
@@ -193,6 +177,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addStrasse(AuthenticationCookie cookie) {
 
@@ -215,6 +200,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addPLZ(AuthenticationCookie cookie) {
 
@@ -239,6 +225,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addLand(AuthenticationCookie cookie) {
 
@@ -261,6 +248,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static Date addAufnahmedatum(AuthenticationCookie cookie) {
 
@@ -293,6 +281,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addTitel(AuthenticationCookie cookie) {
 
@@ -300,8 +289,8 @@ public class MitarbeiterAddKundeInterface {
 
 		String titel = "Titel (Herr, Frau):";
 		String titelEntry = UserInputReader.requestString(titel).toUpperCase();
-		
-		if(!(titelEntry.trim().toUpperCase().equals("HERR") || titelEntry.trim().toUpperCase().equals("FRAU"))) {
+
+		if (!(titelEntry.trim().toUpperCase().equals("HERR") || titelEntry.trim().toUpperCase().equals("FRAU"))) {
 			System.out.println("Ihre Eingabe ist ungültig! Bitte versuchen Sie es erneut: ");
 			addTitel(cookie);
 		}
@@ -314,6 +303,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static String addKontostatus(AuthenticationCookie cookie) {
 
@@ -321,8 +311,8 @@ public class MitarbeiterAddKundeInterface {
 
 		String status = "Kontostatus (Standartkonto, Jugendkonto, Studentenkonto):";
 		String statusEntry = UserInputReader.requestString(status).toUpperCase();
-		
-		if(!(statusEntry.trim().equals("STANDARTKONTO") || statusEntry.trim().equals("JUGENDKONTO")
+
+		if (!(statusEntry.trim().equals("STANDARTKONTO") || statusEntry.trim().equals("JUGENDKONTO")
 				|| statusEntry.trim().equals("STUDENTENKONTO"))) {
 			System.out.println("Ihre Eingabe ist ungültig! Bitte versuchen Sie es erneut: ");
 			addKontostatus(cookie);
@@ -336,6 +326,7 @@ public class MitarbeiterAddKundeInterface {
 	 * @param cookie
 	 *            Authentication for the session. Check if session is still
 	 *            valid.
+	 * @return The valid entry.
 	 */
 	public static int addKreditberechtigung(AuthenticationCookie cookie) {
 
@@ -349,5 +340,106 @@ public class MitarbeiterAddKundeInterface {
 			addKreditberechtigung(cookie);
 		}
 		return kreditBerechtEntry;
+	}
+
+	/**
+	 * Checks if the format of the entry for 'Einstelldatum' is vaild.
+	 * 
+	 * @param cookie
+	 *            Authentication for the session. Check if session is still
+	 *            valid.
+	 * @return The vaild entry.
+	 */
+	public static Date addEinstelldatum(AuthenticationCookie cookie) {
+
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String einstell = "Einstelldatum:";
+		Date einstellEntry = UserInputReader.requestDate(einstell);
+
+		return einstellEntry;
+	}
+
+	/**
+	 * Checks if the entry for 'Monatslohn' is an int.
+	 * 
+	 * @param cookie
+	 *            Authentication for the session. Check if session is still
+	 *            valid.
+	 * @return The vaild entry.
+	 */
+	public static int addMonatslohn(AuthenticationCookie cookie) {
+
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String lohn = "Monatslohn:";
+		int lohnEntry = UserInputReader.requestInteger(lohn);
+
+		return lohnEntry;
+	}
+
+	/**
+	 * Checks if the format of the entry for 'Fristdatum' is vaild.
+	 * 
+	 * @param cookie
+	 *            Authentication for the session. Check if session is still
+	 *            valid.
+	 * @return The vaild entry.
+	 */
+	public static Date addFristdatum(AuthenticationCookie cookie) {
+
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String frist = "Fristdatum:";
+		Date fristEntry = UserInputReader.requestDate(frist);
+
+		return fristEntry;
+	}
+
+	/**
+	 * Check if entry for 'Angestelltenstaus' is vaild enum.
+	 * 
+	 * @param cookie
+	 *            Authentication for the session. Check if session is still
+	 *            valid.
+	 * @return The valid entry.
+	 */
+	public static String addAngestelltenStatus(AuthenticationCookie cookie) {
+
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String status = "Status (Verfuegbar, Krank, Beurlaubt):";
+		String statusEntry = UserInputReader.requestString(status).toUpperCase();
+
+		if (!(statusEntry.trim().equals("VERFUEGBAR") || statusEntry.trim().equals("KRANK")
+				|| statusEntry.trim().equals("BEURLAUBT"))) {
+			System.out.println("Ihre Eingabe ist ungültig! Bitte versuchen Sie es erneut: ");
+			addAngestelltenStatus(cookie);
+		}
+		return statusEntry;
+	}
+
+	/**
+	 * Checks if the format of the entry for 'Anstellung' is vaild.
+	 * 
+	 * @param cookie
+	 *            Authentication for the session. Check if session is still
+	 *            valid.
+	 * @return The vaild entry.
+	 */
+	public static String addAnstellung(AuthenticationCookie cookie) {
+
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String anstellung = "Anstellung:";
+		String anstellungEntry = UserInputReader.requestString(anstellung);
+		char[] anstellungArray = anstellungEntry.toCharArray();
+
+		if (!Character.isUpperCase(anstellungArray[0])) {
+			System.out.println("Ihre Eingabe ist ungültig! Bitte versuchen Sie es erneut: ");
+			addAnstellung(cookie);
+		}
+
+		return anstellungEntry;
 	}
 }

@@ -7,8 +7,15 @@ import java.text.ParseException;
 import database.UpdateKunde;
 import tools.AuthenticationCookie;
 import tools.LoginChecker;
+import tools.Role;
 import tools.UserInputReader;
 
+/**
+ * Interface all or more than one user role can use.
+ * 
+ * @author CM
+ *
+ */
 public class AllUserInterface {
 
 	/**
@@ -33,28 +40,47 @@ public class AllUserInterface {
 			LoginChecker.logoutIfSessionExpired(cookie);
 			String entryString = UserInputReader.requestString(attribute);
 
-			if (input == 11 && (!entryString.equals("STANDARTKONTO") || !entryString.equals("JUGENDKONTO")
-					|| !entryString.equals("STUDENTENKONTO"))) {
+			if (input == 10 && !(entryString.trim().toUpperCase().equals("STANDARTKONTO")
+					|| entryString.trim().toUpperCase().equals("JUGENDKONTO")
+					|| entryString.trim().toUpperCase().equals("STUDENTENKONTO"))) {
 				System.out.println("Falsche Eingabe! " + input + " ist kein gültiger Wert.");
 				editKunde(cookie, kundeId);
 			}
-			if (input == 10 && (!entryString.equals("1") || !entryString.equals("2"))) {
+			if (input == 11 && !(entryString.trim().equals("1") || entryString.trim().equals("2"))) {
 				System.out.println("Falsche Eingabe! " + input + " ist kein gültiger Wert.");
 				editKunde(cookie, kundeId);
 			}
-			
+
 			try {
-				uk.updateKundeAttribute(kundeId, attribute, input);
+				uk.updateKundeAttribute(kundeId, entryString, input);
 			} catch (SQLException | ParseException e) {
 				System.out.println("Daten konnten nicht aktualisiert werden. Bitte versuchen Sie es erneut.");
 				editKunde(cookie, kundeId);
 			}
 
 		} else if (input == 0) {
-			MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
+			Role role = cookie.getRole();
+			if (role.equals("MITARBEITER")) {
+				MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
+			} else if (role.equals("KUNDE")) {
+				MainKundenInterface.kundeMainMenu(cookie);
+			}
 		}
 	}
 
+	/**
+	 * Creates an output of an table. Lists the attributes among each other
+	 * below the columns.
+	 * 
+	 * @param maxValueLength
+	 *            Maximum length of all attribute names.
+	 * @param maxColumnLength
+	 *            Maximum length of all column names.
+	 * @param rs2
+	 *            ResultSet with all attribute and column entries from database.
+	 * @param columns
+	 *            Number of all columns.
+	 */
 	public static void outputColumnNamesAndAttributes(int maxValueLength, int maxColumnLength, ResultSet rs2,
 			int columns) {
 
@@ -65,6 +91,7 @@ public class AllUserInterface {
 
 			try {
 				rs2.beforeFirst();
+				// If the length of a column name is > than length of attributes
 				if (maxColumnLength > maxValueLength) {
 					for (int i = 1; i <= columns; i++) {
 						System.out.print(
@@ -77,7 +104,8 @@ public class AllUserInterface {
 						}
 						System.out.println();
 					}
-				} else {
+				} else { // If the length of an attribute entry > than length of
+							// column names
 					for (int i = 1; i <= columns; i++) {
 						System.out.print(
 								String.format("%-" + (maxValueLength + 1) + "s", rs2.getMetaData().getColumnLabel(i)));

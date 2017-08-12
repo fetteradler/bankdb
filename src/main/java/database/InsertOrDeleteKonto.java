@@ -10,7 +10,13 @@ import java.text.ParseException;
 import database.tools.DatabaseConnectionSingleton;
 import database.tools.SQLTableParser;
 
-public class MitarbeiterAllow {
+/**
+ * Insert a new 'Konto' to a 'Kunde'. Delete a chosen 'Kunde' from the databse.
+ * 
+ * @author CM
+ *
+ */
+public class InsertOrDeleteKonto {
 
 	/**
 	 * Add a new 'Kredit' for a chosen 'Kunde'.
@@ -237,5 +243,45 @@ public class MitarbeiterAllow {
 		ps2.setInt(1, sparId);
 		ps2.setInt(2, kundeId);
 		ps2.executeUpdate();
+	}
+
+	/**
+	 * Delete a chosen 'Konto' from the database. Select this via 'kontoid'.
+	 * 
+	 * @param kontoId
+	 *            Id of the 'Konto'.
+	 * @param kontoArt
+	 *            Kind of 'Konto'.
+	 * 
+	 * @throws SQLException
+	 *             if deleting of the 'Konto' fails.
+	 */
+	public void deleteChosenKonto(int kontoId, int kontoArt) throws SQLException {
+
+		Connection con = null;
+		try {
+			con = DatabaseConnectionSingleton.getInstance().getDbConnection();
+		} catch (SQLException e1) {
+			System.err.println("DB Verbindung konnte nicht aufgebaut werden!");
+			System.exit(1);
+		}
+
+		if (kontoArt == 1) {
+			PreparedStatement delete = con.prepareStatement("DELETE FROM Girokonto WHERE giroId=?");
+			delete.setInt(1, kontoId);
+			delete.executeUpdate();
+		} else if (kontoArt == 2) {
+			PreparedStatement delete = con.prepareStatement("DELETE FROM Kredit WHERE kreditId=?");
+			delete.setInt(1, kontoId);
+			delete.executeUpdate();
+		} else if (kontoArt == 3) {
+			PreparedStatement delete = con.prepareStatement("DELETE FROM Kreditkartenkonto WHERE kreditkarteId=?");
+			delete.setInt(1, kontoId);
+			delete.executeUpdate();
+		} else if (kontoArt == 4) {
+			PreparedStatement delete = con.prepareStatement("DELETE FROM Sparbuch WHERE sparIdId=?");
+			delete.setInt(1, kontoId);
+			delete.executeUpdate();
+		}
 	}
 }

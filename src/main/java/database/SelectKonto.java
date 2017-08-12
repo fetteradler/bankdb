@@ -8,8 +8,25 @@ import java.sql.SQLException;
 import database.tools.DatabaseConnectionSingleton;
 import gui.AllUserInterface;
 
+/**
+ * Select all 'Konto' of a chosen type for a selected 'Kunde'.
+ * 
+ * @author CM
+ *
+ */
 public class SelectKonto {
 
+	/**
+	 * Choose the type of the 'Konto' that want to select.
+	 * 
+	 * @param kundeId
+	 *            Id of the 'Kunde' of the 'Konto'.
+	 * @param type
+	 *            Type of the 'Konto' ('Kredit', 'Girokonto',
+	 *            'Kreditkartenkonto', 'Sparbuch')
+	 * @throws SQLException
+	 *             If selection fails.
+	 */
 	public void kontoType(int kundeId, int type) throws SQLException {
 
 		Connection con = null;
@@ -46,6 +63,22 @@ public class SelectKonto {
 		}
 	}
 
+	/**
+	 * Find all 'Konto' for the chosen type and 'Kunde'.
+	 * 
+	 * @param con
+	 *            Connection to databse.
+	 * @param kontoId
+	 *            Id of the 'Kunde' of the 'Konto'.
+	 * @param select1
+	 *            Select statement to find the id of the 'Konto'.
+	 * @param select2
+	 *            Select statement to find all attribute of the 'Konto'.
+	 * @param selectAttribute
+	 *            Attribute of the Id of the 'Konto'.
+	 * @throws SQLException
+	 *             If selection fails.
+	 */
 	public void selectChoosenKonto(Connection con, int kontoId, String select1, String select2, String selectAttribute)
 			throws SQLException {
 

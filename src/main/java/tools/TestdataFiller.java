@@ -18,7 +18,7 @@ import tools.EnumParser.titel;
 /**
  * Fill database with testdata from CSV files.
  * 
- * @author caro
+ * @author CM
  *
  */
 public abstract class TestdataFiller {
@@ -27,13 +27,14 @@ public abstract class TestdataFiller {
 	private static File file;
 
 	/**
-	 * Fill table 'Angestellter' with testdata
+	 * Fill table 'Angestellter' with testdata from .csv file.
 	 * 
 	 * @param con
-	 *            Connection to database
+	 *            Connection to database.
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws ParseException
-	 * @throws IOException
+	 *             If parsing from date entry to sql date fails.
 	 */
 	public static void insertAngestellten(Connection con) throws SQLException, ParseException {
 
@@ -45,11 +46,9 @@ public abstract class TestdataFiller {
 			br = new BufferedReader(new FileReader(file));
 			br.readLine();
 		} catch (FileNotFoundException e1) {
-			// TODO Auto-generated catch block
-			e1.printStackTrace();
+			System.out.println("Datei konnte nicht gefunden werden!");
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
-			e.printStackTrace();
+			System.out.println("Fehler beim einlesen der Daten!");
 		}
 
 		String fileRow;
@@ -57,62 +56,59 @@ public abstract class TestdataFiller {
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
-				"INSERT INTO Angestellter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				"INSERT INTO Angestellter(angestelltId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status, anstellung) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
 		try {
 			while ((fileRow = br.readLine()) != null) {
 
 				s = fileRow.split(split);
 
-				if (!s[15].equals("Fillialleiter")) {
-
-					ps.setInt(1, Integer.parseInt(s[0]));
-					ps.setString(2, s[1]);
-					ps.setString(3, s[2]);
-					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
-					ps.setString(5, s[4]);
-					ps.setString(6, s[5]);
-					ps.setString(7, s[6]);
-					ps.setString(8, s[7]);
-					ps.setString(9, s[8]);
-					ps.setString(10, s[9]);
-					String titelEnum = s[10].trim();
-					if (titelEnum.equals("HERR")) {
-						ps.setString(11, titel.HERR.toString());
-					} else if (titelEnum.equals("FRAU")) {
-						ps.setString(11, titel.FRAU.toString());
-					} else {
-						throw new IOException();
-					}
-					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
-					ps.setInt(13, Integer.parseInt(s[12]));
-					if (s[13] == null) {
-						ps.setDate(14, SQLTableParser.convertingDateFormat(s[13]));
-					} else {
-						ps.setDate(14, null);
-					}
-					String statusEnum = s[14];
-					if (statusEnum.equals("VERFUEGBAR")) {
-						ps.setString(15, status.VERFUEGBAR.toString());
-					} else if (statusEnum.equals("KRANK")) {
-						ps.setString(15, status.KRANK.toString());
-					} else if (statusEnum.equals("BEURLAUBT")) {
-						ps.setString(15, status.BEURLAUBT.toString());
-					} else {
-						System.out.println("Falsche Eingabe! " + statusEnum);
-					}
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setString(2, s[1]);
+				ps.setString(3, s[2]);
+				ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
+				ps.setString(5, s[4]);
+				ps.setString(6, s[5]);
+				ps.setString(7, s[6]);
+				ps.setString(8, s[7]);
+				ps.setString(9, s[8]);
+				ps.setString(10, s[9]);
+				String titelEnum = s[10].trim();
+				if (titelEnum.equals("HERR")) {
+					ps.setString(11, titel.HERR.toString());
+				} else if (titelEnum.equals("FRAU")) {
+					ps.setString(11, titel.FRAU.toString());
+				} else {
+					throw new IOException();
 				}
-				ps.executeUpdate();
+				ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
+				ps.setInt(13, Integer.parseInt(s[12]));
+				if (s[13] == null) {
+					ps.setDate(14, SQLTableParser.convertingDateFormat(s[13]));
+				} else {
+					ps.setDate(14, null);
+				}
+				String statusEnum = s[14];
+				if (statusEnum.equals("VERFUEGBAR")) {
+					ps.setString(15, status.VERFUEGBAR.toString());
+				} else if (statusEnum.equals("KRANK")) {
+					ps.setString(15, status.KRANK.toString());
+				} else if (statusEnum.equals("BEURLAUBT")) {
+					ps.setString(15, status.BEURLAUBT.toString());
+				} else {
+					System.out.println("Falsche Eingabe! " + statusEnum);
+				}
+				ps.setString(16, s[15].toUpperCase());
 			}
+			ps.executeUpdate();
 
 		} catch (IOException e) {
-			e.printStackTrace();
+			System.out.println("Fehler beim einlesen der Daten!");
 		} finally {
 			try {
 				br.close();
 			} catch (IOException e) {
-				// TODO Auto-generated catch block
-				e.printStackTrace();
+				System.out.println("Reader konnte nicht geschlossen werden.");
 			}
 		}
 
@@ -120,13 +116,16 @@ public abstract class TestdataFiller {
 	}
 
 	/**
-	 * Fill table 'Filialleiter' with testdata
+	 * Fill table 'Filialleiter' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws ParseException
+	 *             If parsing from date entry to sql date fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertFilialleiter(Connection con) throws SQLException, ParseException, IOException {
 
@@ -141,71 +140,68 @@ public abstract class TestdataFiller {
 		String split = ":";
 
 		PreparedStatement ps = con.prepareStatement(
-				"INSERT INTO Filialleiter(leiterId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, fristDatum, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
+				"INSERT INTO Filialleiter(leiterId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, plz, land, titel, einstellDatum, monatsLohn, status) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
-				s = fileRow.split(split);
+			s = fileRow.split(split);
 
-				if (s[15].equals("Fillialleiter")) {
+			if (s[15].trim().toUpperCase().equals("FILIALLEITER")) {
 
-					ps.setInt(1, Integer.parseInt(s[0]));
-					ps.setString(2, s[1]);
-					ps.setString(3, s[2]);
-					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
-					ps.setString(5, s[4]);
-					ps.setString(6, s[5]);
-					ps.setString(7, s[6]);
-					ps.setString(8, s[7]);
-					ps.setString(9, s[8]);
-					ps.setString(10, s[9]);
-					String titelEnum = s[10].trim();
-					if (titelEnum.equals("HERR")) {
-						ps.setString(11, titel.HERR.toString());
-					} else if (titelEnum.equals("FRAU")) {
-						ps.setString(11, titel.FRAU.toString());
-					} else {
-						throw new IOException();
-					}
-					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
-					ps.setInt(13, Integer.parseInt(s[12]));
-					if (s[13] == null) {
-						ps.setDate(14, SQLTableParser.convertingDateFormat(s[13]));
-					} else {
-						ps.setDate(14, null);
-					}
-					String statusEnum = s[14];
-					if (statusEnum.equals("VERFUEGBAR")) {
-						ps.setString(15, status.VERFUEGBAR.toString());
-					} else if (statusEnum.equals("KRANK")) {
-						ps.setString(15, status.KRANK.toString());
-					} else if (statusEnum.equals("BEURLAUBT")) {
-						ps.setString(15, status.BEURLAUBT.toString());
-					} else {
-						System.out.println("Falsche Eingabe! " + statusEnum);
-					}
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setString(2, s[1]);
+				ps.setString(3, s[2]);
+				ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
+				System.out.println("1");
+				ps.setString(5, s[4]);
+				ps.setString(6, s[5]);
+				ps.setString(7, s[6]);
+				ps.setString(8, s[7]);
+				ps.setString(9, s[8]);
+				ps.setString(10, s[9]);
+				String titelEnum = s[10].trim();
+				if (titelEnum.equals("HERR")) {
+					ps.setString(11, titel.HERR.toString());
+				} else if (titelEnum.equals("FRAU")) {
+					ps.setString(11, titel.FRAU.toString());
 				} else {
-					continue;
+					throw new IOException();
 				}
-				ps.executeUpdate();
+				ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
+				ps.setInt(13, Integer.parseInt(s[12]));
+				System.out.println("2");
+				String statusEnum = s[14];
+				if (statusEnum.equals("VERFUEGBAR")) {
+					ps.setString(14, status.VERFUEGBAR.toString());
+				} else if (statusEnum.equals("KRANK")) {
+					ps.setString(14, status.KRANK.toString());
+				} else if (statusEnum.equals("BEURLAUBT")) {
+					ps.setString(14, status.BEURLAUBT.toString());
+				} else {
+					System.out.println("Falsche Eingabe! " + statusEnum);
+				}
+			} else {
+				continue;
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			ps.executeUpdate();
+			br.close();
 		}
 
 		System.out.println("Filialleiter Erfolgreich hinzugefuegt.");
-		br.close();
+
 	}
 
 	/**
-	 * Fill table 'Kunde' with testdata
+	 * Fill table 'Kunde' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws ParseException
+	 *             If parsing from date entry to sql date fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKunden(Connection con) throws SQLException, ParseException, IOException {
 
@@ -223,72 +219,69 @@ public abstract class TestdataFiller {
 				"INSERT INTO Kunde(kundeId, vorname, nachname, gebDatum, telNr, mail, wohnort, strasse, "
 						+ "plz, land, titel, aufnahmeDatum, kontoStatus, kreditBerecht) VALUES(?,?,?,?,?,?,?,?,?,?,?,?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
+		while ((fileRow = br.readLine()) != null) {
 
-				s = fileRow.split(split);
+			s = fileRow.split(split);
 
-				if (s[0].equals("")) {
-					continue;
+			if (s[0].equals("")) {
+				continue;
+			} else {
+				ps.setInt(1, Integer.parseInt(s[0]));
+				ps.setString(2, s[1]);
+				ps.setString(3, s[2]);
+				ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
+				ps.setString(5, s[4]);
+				ps.setString(6, s[5]);
+				ps.setString(7, s[6]);
+				ps.setString(8, s[7]);
+				ps.setString(9, s[8]);
+				ps.setString(10, s[9]);
+				String titelEnum = s[10].trim();
+				if (titelEnum.equals("HERR")) {
+					ps.setString(11, titel.HERR.toString());
+				} else if (titelEnum.equals("FRAU")) {
+					ps.setString(11, titel.FRAU.toString());
 				} else {
-					ps.setInt(1, Integer.parseInt(s[0]));
-					ps.setString(2, s[1]);
-					ps.setString(3, s[2]);
-					ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
-					ps.setString(5, s[4]);
-					ps.setString(6, s[5]);
-					ps.setString(7, s[6]);
-					ps.setString(8, s[7]);
-					ps.setString(9, s[8]);
-					ps.setString(10, s[9]);
-					String titelEnum = s[10].trim();
-					if (titelEnum.equals("HERR")) {
-						ps.setString(11, titel.HERR.toString());
-					} else if (titelEnum.equals("FRAU")) {
-						ps.setString(11, titel.FRAU.toString());
-					} else {
-						throw new IOException();
-					}
-					ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
-
-					String statusEnum = s[12].trim();
-					if (statusEnum.equals("STANDARTKONTO")) {
-						ps.setString(13, kontoStatus.STANDARTKONTO.toString());
-					} else if (statusEnum.equals("JUGENDKONTO")) {
-						ps.setString(13, kontoStatus.JUGENDKONTO.toString());
-					} else if (statusEnum.equals("STUDENTENKONTO")) {
-						ps.setString(13, kontoStatus.STUDENTENKONTO.toString());
-					} else {
-						System.out.println("Falsche Eingabe! " + statusEnum);
-					}
-
-					String kredit = s[13].trim();
-					if (kredit.equals("1")) {
-						ps.setBoolean(14, true);
-					} else if (kredit.equals("0")) {
-						ps.setBoolean(14, false);
-					} else {
-						System.out.println("Falsche Eingabe! " + kredit);
-					}
+					throw new IOException();
 				}
-				ps.executeUpdate();
+				ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
+
+				String statusEnum = s[12].trim();
+				if (statusEnum.equals("STANDARTKONTO")) {
+					ps.setString(13, kontoStatus.STANDARTKONTO.toString());
+				} else if (statusEnum.equals("JUGENDKONTO")) {
+					ps.setString(13, kontoStatus.JUGENDKONTO.toString());
+				} else if (statusEnum.equals("STUDENTENKONTO")) {
+					ps.setString(13, kontoStatus.STUDENTENKONTO.toString());
+				} else {
+					System.out.println("Falsche Eingabe! " + statusEnum);
+				}
+
+				String kredit = s[13].trim();
+				if (kredit.equals("1")) {
+					ps.setBoolean(14, true);
+				} else if (kredit.equals("0")) {
+					ps.setBoolean(14, false);
+				} else {
+					System.out.println("Falsche Eingabe! " + kredit);
+				}
 			}
+			ps.executeUpdate();
 			br.close();
-		} catch (IOException e) {
-			e.printStackTrace();
 		}
 
 		System.out.println("Kunden Erfolgreich hinzugefuegt.");
-		br.close();
 	}
 
 	/**
-	 * Fill table 'Girokonto' with testdata
+	 * Fill table 'Girokonto' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertGirokonto(Connection con) throws SQLException, IOException {
 
@@ -305,34 +298,31 @@ public abstract class TestdataFiller {
 		PreparedStatement ps = con
 				.prepareStatement("INSERT INTO Girokonto(giroId, guthaben, gebuehren) VALUES (?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
-				s = fileRow.split(split);
+		while ((fileRow = br.readLine()) != null) {
+			s = fileRow.split(split);
 
-				ps.setInt(1, Integer.parseInt(s[0]));
-				ps.setInt(2, Integer.parseInt(s[1]));
-				if (s.length <= 2) {
-					ps.setInt(3, 0);
-				} else {
-					ps.setInt(3, Integer.parseInt(s[2]));
-				}
-				ps.executeUpdate();
+			ps.setInt(1, Integer.parseInt(s[0]));
+			ps.setInt(2, Integer.parseInt(s[1]));
+			if (s.length <= 2) {
+				ps.setInt(3, 0);
+			} else {
+				ps.setInt(3, Integer.parseInt(s[2]));
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			ps.executeUpdate();
 		}
-
-		System.out.println("Girokonto Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Girokonto Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Sparbuch' with testdata
+	 * Fill table 'Sparbuch' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertSparbuch(Connection con) throws SQLException, IOException {
 
@@ -348,30 +338,28 @@ public abstract class TestdataFiller {
 
 		PreparedStatement ps = con.prepareStatement("INSERT INTO Sparbuch(sparId, guthaben, zinsen) VALUES (?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
-				s = fileRow.split(split);
+		while ((fileRow = br.readLine()) != null) {
+			s = fileRow.split(split);
 
-				ps.setInt(1, Integer.parseInt(s[0]));
-				ps.setInt(2, Integer.parseInt(s[1]));
-				ps.setInt(3, Integer.parseInt(s[2]));
-				ps.executeUpdate();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			ps.setInt(1, Integer.parseInt(s[0]));
+			ps.setInt(2, Integer.parseInt(s[1]));
+			ps.setInt(3, Integer.parseInt(s[2]));
+			ps.executeUpdate();
 		}
 
-		System.out.println("Sparbuch Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Sparbuch Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kreditkarte' with testdata
+	 * Fill table 'Kreditkarte' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKreditkarte(Connection con) throws SQLException, IOException {
 
@@ -388,35 +376,34 @@ public abstract class TestdataFiller {
 		PreparedStatement ps = con
 				.prepareStatement("INSERT INTO Kreditkartenkonto(kreditkarteId, betrag, zinsen) VALUES (?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
-				s = fileRow.split(split);
+		while ((fileRow = br.readLine()) != null) {
+			s = fileRow.split(split);
 
-				ps.setInt(1, Integer.parseInt(s[0]));
-				ps.setInt(2, Integer.parseInt(s[1]));
-				if (s.length <= 2) {
-					ps.setInt(3, 0);
-				} else {
-					ps.setInt(3, Integer.parseInt(s[2]));
-				}
-				ps.executeUpdate();
+			ps.setInt(1, Integer.parseInt(s[0]));
+			ps.setInt(2, Integer.parseInt(s[1]));
+			if (s.length <= 2) {
+				ps.setInt(3, 0);
+			} else {
+				ps.setInt(3, Integer.parseInt(s[2]));
 			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			ps.executeUpdate();
 		}
 
-		System.out.println("Kreditkarte Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kreditkarte Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kredit' with testdata.
+	 * Fill table 'Kredit' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
 	 * @throws SQLException
+	 *             If insert into database fails.
 	 * @throws ParseException
+	 *             If parsing from date entry to sql date fails.
 	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKredit(Connection con) throws SQLException, ParseException, IOException {
 
@@ -433,32 +420,30 @@ public abstract class TestdataFiller {
 		PreparedStatement ps = con
 				.prepareStatement("INSERT INTO Kredit(kreditId, betrag, zinsen, raten, laufzeit) VALUES (?,?,?,?,?)");
 
-		try {
-			while ((fileRow = br.readLine()) != null) {
-				s = fileRow.split(split);
+		while ((fileRow = br.readLine()) != null) {
+			s = fileRow.split(split);
 
-				ps.setInt(1, Integer.parseInt(s[0]));
-				ps.setInt(2, Integer.parseInt(s[1]));
-				ps.setInt(3, Integer.parseInt(s[2]));
-				ps.setInt(4, Integer.parseInt(s[3]));
-				ps.setDate(5, SQLTableParser.convertingDateFormat(s[4]));
-				ps.executeUpdate();
-			}
-		} catch (IOException e) {
-			e.printStackTrace();
+			ps.setInt(1, Integer.parseInt(s[0]));
+			ps.setInt(2, Integer.parseInt(s[1]));
+			ps.setInt(3, Integer.parseInt(s[2]));
+			ps.setInt(4, Integer.parseInt(s[3]));
+			ps.setDate(5, SQLTableParser.convertingDateFormat(s[4]));
+			ps.executeUpdate();
 		}
 
-		System.out.println("Kredit Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kredit Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kunde_Sparbuch' with testdata
+	 * Fill table 'Kunde_Sparbuch' with testdata from .csv file
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException
 	 * @throws SQLException
+	 *             If insert into database fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKundeSparbuch(Connection con) throws IOException, SQLException {
 
@@ -491,17 +476,19 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 
-		System.out.println("Kunde_Sparbuch Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kunde_Sparbuch Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kunde_Girokonto' with testdata
+	 * Fill table 'Kunde_Girokonto' with testdata from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException
 	 * @throws SQLException
+	 *             If insert into database fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKundeGirokonto(Connection con) throws IOException, SQLException {
 
@@ -540,17 +527,19 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 
-		System.out.println("Kunde_Girokonto Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kunde_Girokonto Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kunde_Kreditkarte' with testdata
+	 * Fill table 'Kunde_Kreditkarte' with test data from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException
 	 * @throws SQLException
+	 *             If insert into database fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKundeKreditkarte(Connection con) throws IOException, SQLException {
 
@@ -584,21 +573,19 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 
-		System.out.println("Kunde_Kreditkarte Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kunde_Kreditkarte Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Kunde_Kredit' with testdata. insertKundeKredit klingt als
-	 * wolltest du für einen Kunden einen Kredit erstellen. Gilt für alle
-	 * Methoden diese Klasse.
+	 * Fill table 'Kunde_Kredit' with test data from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException
-	 *             Dokumentation!
 	 * @throws SQLException
-	 *             Dokumentation!
+	 *             If insert into database fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertKundeKredit(Connection con) throws IOException, SQLException {
 
@@ -636,19 +623,19 @@ public abstract class TestdataFiller {
 			}
 			ps.executeUpdate();
 		}
-		System.out.println("Kunde_Kredit Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Kunde_Kredit Erfolgreich hinzugefuegt.");
 	}
 
 	/**
-	 * Fill table 'Angestellter_Kunde' with testdata
+	 * Fill table 'Angestellter_Kunde' with test data from .csv file.
 	 * 
 	 * @param con
 	 *            Connection to database
-	 * @throws IOException
-	 *             Dokumentation!
 	 * @throws SQLException
-	 *             Dokumentation!
+	 *             If insert into database fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
 	 */
 	public static void insertAngestellterKunde(Connection con) throws IOException, SQLException {
 
@@ -678,10 +665,22 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 
-		System.out.println("Angestellter_Kunde Erfolgreich hinzugefuegt.");
 		br.close();
+		System.out.println("Angestellter_Kunde Erfolgreich hinzugefuegt.");
 	}
 
+	/**
+	 * Fill the tables in database with testdata.
+	 * 
+	 * @param con
+	 *            Connection to database.
+	 * @throws SQLException
+	 *             If insert into database fails.
+	 * @throws ParseException
+	 *             If parsing from date entry to sql date fails.
+	 * @throws IOException
+	 *             If reading testdata from file via BufferedReader fails.
+	 */
 	public static void fillAllTestdata(Connection con) throws SQLException, ParseException, IOException {
 
 		TestdataFiller.insertAngestellten(con);

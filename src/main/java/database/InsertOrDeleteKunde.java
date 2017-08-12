@@ -9,7 +9,13 @@ import database.tools.DatabaseConnectionSingleton;
 import gui.MainMitarbeiterInterface;
 import tools.AuthenticationCookie;
 
-public class MitarbeiterEditDatabase {
+/**
+ * Insert or delete a chosen 'Kunde' to/from the database.
+ * 
+ * @author CM
+ *
+ */
+public class InsertOrDeleteKunde {
 
 	/**
 	 * Delete a chosen 'Kunde' from the database. Select this 'Kunde' via
@@ -17,8 +23,10 @@ public class MitarbeiterEditDatabase {
 	 * 
 	 * @param kundeId
 	 *            Id of the 'Kunde'.
+	 * @throws SQLException
+	 *             If deleting of 'Kunde' faild.
 	 */
-	public void deletChosenKunde(int kundeId, AuthenticationCookie cookie) {
+	public void deletChosenKunde(int kundeId) throws SQLException {
 
 		Connection con = null;
 		try {
@@ -28,14 +36,9 @@ public class MitarbeiterEditDatabase {
 			System.exit(1);
 		}
 
-		try {
-			PreparedStatement delete = con.prepareStatement("DELETE FROM Kunde WHERE kundeId=?");
-			delete.setInt(1, kundeId);
-			delete.executeQuery();
-		} catch (SQLException e) {
-			System.out.println("Es ist ein Fehler aufgetreten. Kunde konnte nicht gelöscht werden.");
-			MainMitarbeiterInterface.mitarbeiterMainMenu(cookie);
-		}
+		PreparedStatement delete = con.prepareStatement("DELETE FROM Kunde WHERE kundeId=?");
+		delete.setInt(1, kundeId);
+		delete.executeUpdate();
 	}
 
 	/**
@@ -104,45 +107,5 @@ public class MitarbeiterEditDatabase {
 			ps.setBoolean(13, true);
 
 		ps.executeUpdate();
-	}
-
-	/**
-	 * Delete a chosen 'Konto' from the database. Select this via 'kontoid'.
-	 * 
-	 * @param kontoId
-	 *            Id of the 'Konto'.
-	 * @param kontoArt
-	 *            Kind of 'Konto'.
-	 * 
-	 * @throws SQLException
-	 *             if delete fails.
-	 */
-	public void deleteChosenKonto(int kontoId, int kontoArt) throws SQLException {
-
-		Connection con = null;
-		try {
-			con = DatabaseConnectionSingleton.getInstance().getDbConnection();
-		} catch (SQLException e1) {
-			System.err.println("DB Verbindung konnte nicht aufgebaut werden!");
-			System.exit(1);
-		}
-
-		if (kontoArt == 1) {
-			PreparedStatement delete = con.prepareStatement("DELETE FROM Girokonto WHERE giroId=?");
-			delete.setInt(1, kontoId);
-			delete.executeQuery();
-		} else if (kontoArt == 2) {
-			PreparedStatement delete = con.prepareStatement("DELETE FROM Kredit WHERE kreditId=?");
-			delete.setInt(1, kontoId);
-			delete.executeQuery();
-		} else if (kontoArt == 3) {
-			PreparedStatement delete = con.prepareStatement("DELETE FROM Kreditkartenkonto WHERE kreditkarteId=?");
-			delete.setInt(1, kontoId);
-			delete.executeQuery();
-		} else if (kontoArt == 4) {
-			PreparedStatement delete = con.prepareStatement("DELETE FROM Sparbuch WHERE sparIdId=?");
-			delete.setInt(1, kontoId);
-			delete.executeQuery();
-		}
 	}
 }

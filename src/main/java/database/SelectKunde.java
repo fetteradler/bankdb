@@ -8,10 +8,17 @@ import java.sql.SQLException;
 import database.tools.DatabaseConnectionSingleton;
 import gui.AllUserInterface;
 
-public class MitarbeiterSelectDatabase {
+/**
+ * Database queries to select a 'Kunde' in different ways.
+ * 
+ * @author CM
+ *
+ */
+public class SelectKunde {
 
 	/**
-	 * Select everything from a chosen 'Kunde' in the database via 'kundeId' of it.
+	 * Select everything from a chosen 'Kunde' in the database via 'kundeId' of
+	 * it.
 	 * 
 	 * @param kundeId
 	 *            Id of the chosen 'Kunde'.
@@ -44,20 +51,22 @@ public class MitarbeiterSelectDatabase {
 		int maxValueLength = 1;
 		while (rs.next()) {
 			for (int i = 1; i <= columns; i++) {
-				if (rs.getString(i).length() > maxValueLength) {
-					maxValueLength = rs.getString(i).length();
+				if (rs.getString(i) != null) {
+					if (rs.getString(i).length() > maxValueLength) {
+						maxValueLength = rs.getString(i).length();
+					}
 				}
 			}
 		}
 
 		AllUserInterface.outputColumnNamesAndAttributes(maxValueLength, maxColumnLength, rs, columns);
-		
+
 		rs.beforeFirst();
 	}
 
 	/**
-	 * Select everything from a chosen 'Kunde' in the database via
-	 * 'vorname' and 'nachname' of it.
+	 * Select everything from a chosen 'Kunde' in the database via 'vorname' and
+	 * 'nachname' of it.
 	 * 
 	 * @param vorname
 	 *            'vorname' of the chosen 'Kunde'.
@@ -93,45 +102,15 @@ public class MitarbeiterSelectDatabase {
 		int maxValueLength = 1;
 		while (rs.next()) {
 			for (int i = 1; i <= columns; i++) {
-				if (rs.getString(i).length() > maxValueLength) {
-					maxValueLength = rs.getString(i).length();
+				if (rs.getString(i) != null) {
+					if (rs.getString(i).length() > maxValueLength) {
+						maxValueLength = rs.getString(i).length();
+					}
 				}
 			}
 		}
 
 		AllUserInterface.outputColumnNamesAndAttributes(maxValueLength, maxColumnLength, rs, columns);
-		
-//		if (maxValueLength == 1) {
-//			System.out.println("Ihre Suchanfrage war leider ohne Erfolg. \n");
-//		} else {
-//			// list column names and entrys vertikal
-//			rs.beforeFirst();
-//			if (maxColumnLength > maxValueLength) {
-//				for (int i = 1; i <= columns; i++) {
-//					System.out.print(
-//							String.format("%-" + (maxColumnLength + 1) + "s", rs.getMetaData().getColumnLabel(i)));
-//				}
-//				System.out.println();
-//				while (rs.next()) {
-//					for (int i = 1; i <= columns; i++) {
-//						System.out.print(String.format("%-" + (maxColumnLength + 1) + "s", rs.getString(i)));
-//					}
-//					System.out.println();
-//				}
-//			} else {
-//				for (int i = 1; i <= columns; i++) {
-//					System.out.print(
-//							String.format("%-" + (maxValueLength + 1) + "s", rs.getMetaData().getColumnLabel(i)));
-//				}
-//				System.out.println();
-//				while (rs.next()) {
-//					for (int i = 1; i <= columns; i++) {
-//						System.out.print(String.format("%-" + (maxValueLength + 1) + "s", rs.getString(i)));
-//					}
-//					System.out.println();
-//				}
-//			}
-//		}
 		rs.beforeFirst();
 	}
 }

@@ -6,8 +6,19 @@ import tools.LoginChecker;
 import tools.Role;
 import tools.UserInputReader;
 
+/**
+ * First interface after starting the application. User can chose the role it
+ * wants to log in. After it chose role, user need to authentication session via
+ * a valid Id.
+ * 
+ * @author CM
+ *
+ */
 public abstract class LoginInterface {
 
+	/**
+	 * String to show user what are its next options.
+	 */
 	private static String anmeldungChoices = "Was möchten Sie als nächstes tun?\n1 - Anmeldung Mitarbeiter \n2 - Anmeldung Kunde \n"
 			+ "3 - Anmeldung Filialleiter \n0 - Beenden";
 
@@ -60,10 +71,11 @@ public abstract class LoginInterface {
 						.requestInteger("Anmeldung Filialleiter... \n" + "Bitte geben Sie ihre ID ein: ");
 				if (LoginChecker.checkValidId(filialleiterId, ValidInputFinder.findAllFilialleiterId())) {
 					cookie = new AuthenticationCookie(Role.FILIALLEITER, filialleiterId);
-			} else {
-				System.out.println("Eingegebene ID ist ungültig! \n");
-				requestingValidUserInput = true;
-			}
+					MainFilialleiterInterface.filialleiterMainMenu(cookie);
+				} else {
+					System.out.println("Eingegebene ID ist ungültig! \n");
+					requestingValidUserInput = true;
+				}
 				break;
 			}
 		}

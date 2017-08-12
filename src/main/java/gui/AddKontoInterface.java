@@ -2,12 +2,18 @@ package gui;
 
 import java.sql.SQLException;
 
-import database.MitarbeiterAllow;
+import database.InsertOrDeleteKonto;
 import tools.AuthenticationCookie;
 import tools.LoginChecker;
 import tools.UserInputReader;
 
-public abstract class MitarbeiterAddKontoInterface {
+/**
+ * Add a new 'Konto' for a chosen 'Kunde'.
+ * 
+ * @author CM
+ *
+ */
+public abstract class AddKontoInterface {
 
 	/**
 	 * Enter input for 'Mitarbeiter' to add a new 'Girokonto' to a 'Kunde'.
@@ -20,7 +26,7 @@ public abstract class MitarbeiterAddKontoInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		MitarbeiterAllow ma = new MitarbeiterAllow();
+		InsertOrDeleteKonto ma = new InsertOrDeleteKonto();
 
 		String id = "Füge Girokonto hinzu.\nKunden-ID:";
 		String guthaben = "Guthaben:";
@@ -52,7 +58,7 @@ public abstract class MitarbeiterAddKontoInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		MitarbeiterAllow ma = new MitarbeiterAllow();
+		InsertOrDeleteKonto ma = new InsertOrDeleteKonto();
 
 		String id = "Füge Kreditkartenkonto hinzu.\nKunden-ID:";
 		String guthaben = "Betrag:";
@@ -84,7 +90,7 @@ public abstract class MitarbeiterAddKontoInterface {
 
 		LoginChecker.logoutIfSessionExpired(cookie);
 
-		MitarbeiterAllow ma = new MitarbeiterAllow();
+		InsertOrDeleteKonto ma = new InsertOrDeleteKonto();
 
 		String id = "Füge Sparbuch hinzu.\nKunden-ID:";
 		String guthaben = "Guthaben:";
