@@ -31,7 +31,8 @@ public class MainKundenInterface {
 		LoginChecker.logoutIfSessionExpired(cookie);
 
 		String mainMenuChoices = "Was möchten Sie als nächstes tun? \n1 - Profil anzeigen \n"
-				+ "2 - Profil bearbeiten \n3 - Kontoübersicht \n4 - Abmelden \n" + "0 - Beenden \n";
+				+ "2 - Profil bearbeiten \n3 - Kontoübersicht \n4 - Kontostand für ein Konto aktualisieren\n5 - Abmelden \n"
+				+ "0 - Beenden \n";
 
 		int input = UserInputReader.requestInteger(mainMenuChoices, new int[] { 0, 1, 2, 3, 4 });
 
@@ -48,6 +49,9 @@ public class MainKundenInterface {
 			showKonto(cookie);
 			break;
 		case 4:
+			refreshKonto(cookie);
+			break;
+		case 5:
 			LoginInterface.anmeldung();
 			break;
 		}
@@ -143,4 +147,23 @@ public class MainKundenInterface {
 		kundeMainMenu(cookie);
 	}
 
+	public static void refreshKonto(AuthenticationCookie cookie) {
+		
+		LoginChecker.logoutIfSessionExpired(cookie);
+
+		String kontoChoices = "Welche Art von Konto möchten Sie aktualisieren?\n1 - Kredit\n2 - Girokonto\n3 - Kreditkartenkonto\n4 - Sparbuch\n5 - Abbrechen";
+		int inputKontoType = UserInputReader.requestInteger(kontoChoices, new int[] { 1, 2, 3, 4, 5 });
+
+		String bookingChoices = "Was möchten Sie tun?\n1 - Geld abheben\n2 - Geld hinzubuchen\n";
+		int inputBooking = UserInputReader.requestInteger(bookingChoices, new int[] {1, 2});
+		
+		if(inputBooking == 1){
+			BookingInterface.removeMoney(cookie, inputKontoType);
+		} else if(inputBooking == 2) {
+			BookingInterface.addMoney(cookie, inputKontoType);
+		}
+		
+		System.out.println();
+		kundeMainMenu(cookie);
+	}
 }
