@@ -1,37 +1,24 @@
 # bankdb
-Verwaltungssimulation einer Bank
+Verwaltungsapplikation einer Bank.
 
-<<<<<<< HEAD
-TODO: README ergänzen. Was genau kann die Software, was nicht. 
-Was muss ich machen, um sie bei mir lokal zum laufen zu bringen, etc.
-
-Andere Anmerkungen: 
-
-- Du hast .classpath und .project und .settings mitgepushed.
-- Auch in deinen .csv Dateien ist Gebühren falsch geschrieben. In der SQL Datei auch.
-
-Tipp:
-
-- Verwende IntelliJ Ultimate, ist konstenlos für Studenten und deutlich mächtiger
-    als Eclipse. Zeigt dir z.B. auch doppelten Code in deinem Projekt an, von dem du eine
-    Menge drin hast.
-=======
 Die Software kann bereits: 
 - automatisches erstellen einer Datenbank
 - Testdaten mit Hilfe eines Javaprogramms aus .csv-Daten einlesen und in die Datenbank einfuegen
-- ueber die Konsoleneingabe manuel Kredite zu Kunden hinzufuegen
+- über die Konsoleneingabe manuel Kredite zu Kunden hinzufügen
+- neue Kunden/Mitarbeiter hinzufügen
+- Kunden können von einem ausgewählten Konto Geld abheben oder aufbuchen
+- über ein Startmenü navigieren ob man sich als Kunde, Mitarbeiter oder Filialleiter anmelden möchte
+- prüfen, ob die eingegebene anmeldeId gültig ist 
+- prüfen, ob eine Sitzung noch gültig ist
+- bestehende Mitarbeiter- und Kundendaten bearbeiten/löschen
+- für bestehende Kunden neue Konten hinzufügen
 
 Die Software soll in Zukunft: 
-- ein Menue haben um sich als Kunde oder Mitarbeiter anzumelden
-- neue Kunden hinzufuegen koennen
-- bestehende Kunden-/Mitarbeiterdaten aktualisieren/loesen
-- Konten manuel hinzufuegen
-- Kunden sollen uerweisungen taetigen koennen
+- Kunden sollen Überweisungen tätigen können
 - automatische berechnung und verrechnung von Zinsen und Gebuehren
 
 
 Installieren der Software:
 Nötig ist eine Java Version(mind. 1.8) und eine aktuelle Version von MySQL. 
 In MySQL muss ein Benutzerkonto angelegt werden. Name und Passwort kann beliebig in der Datei 'DatenbaseInitializer.java' angepasst werden. 
-Dann muss nur noch die Datei 'SimulationStarter.class' mit Java ausgefuehrt werden und die Anwendung lauft. 
->>>>>>> Save
+Dann muss nur noch die Datei 'ApplicationStarter.class' mit Java ausgeführt werden und die Anwendung läuft. 
