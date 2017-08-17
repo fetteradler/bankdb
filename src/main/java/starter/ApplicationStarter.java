@@ -8,7 +8,6 @@ import java.text.ParseException;
 import database.tools.DatabaseConnectionSingleton;
 import database.tools.DatabaseInitializer;
 import gui.LoginInterface;
-import tools.AuthenticationCookie;
 import tools.TestdataFiller;
 import tools.UserInputReader;
 
@@ -55,12 +54,12 @@ public class ApplicationStarter {
 			try {
 				TestdataFiller.fillAllTestdata(con);
 			} catch (SQLException | ParseException | IOException e) {
-				System.err.println("Einfügen der Testdaten ist fehlgeschlagen!");
+				System.err.println("Einfügen der Testdaten ist fehlgeschlagen! " + e);
 				System.exit(1);
 			}
 		}
 		
-		AuthenticationCookie cookie = LoginInterface.anmeldung();
+		LoginInterface.anmeldung();
 
 		try {
 			con.close();

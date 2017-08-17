@@ -2,9 +2,6 @@ package tools;
 
 import java.util.Date;
 
-import lombok.Data;
-import lombok.Getter;
-
 /**
  * Object to check if a session is vaild. Check if the entry for an Id for the
  * chosen role by 'anmeldung' is a existing entry in database. If the user don't
@@ -13,7 +10,6 @@ import lombok.Getter;
  * @author CM
  *
  */
-@Data
 public class AuthenticationCookie {
 
 	/**
@@ -26,12 +22,11 @@ public class AuthenticationCookie {
 	 * Role of the user session('Kunde', 'Mitarbeiter' or
 	 *            'Filialleiter').
 	 */
-	@Getter
 	private Role role;
 	/**
 	 * Id of the user.
 	 */
-	@Getter
+
 	private int userId;
 	/**
 	 * Date the session change to invalid.

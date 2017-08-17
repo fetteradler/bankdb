@@ -26,7 +26,7 @@ public abstract class LoginInterface {
 	 * Menu to chose what to do next. Login as 'Mitarbeiter', login as 'Kunde',
 	 * login as 'Filialleiter' or to quit the program.
 	 */
-	public static AuthenticationCookie anmeldung() {
+	public static void anmeldung() {
 
 		System.out.println("----- Herzlich wilkommen bei Bankdb ----- \n");
 
@@ -79,6 +79,5 @@ public abstract class LoginInterface {
 				break;
 			}
 		}
-		return cookie;
 	}
 }

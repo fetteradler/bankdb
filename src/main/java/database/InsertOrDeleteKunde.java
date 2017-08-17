@@ -6,8 +6,6 @@ import java.sql.PreparedStatement;
 import java.sql.SQLException;
 
 import database.tools.DatabaseConnectionSingleton;
-import gui.MainMitarbeiterInterface;
-import tools.AuthenticationCookie;
 
 /**
  * Insert or delete a chosen 'Kunde' to/from the database.

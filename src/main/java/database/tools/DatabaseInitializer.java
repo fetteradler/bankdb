@@ -35,7 +35,6 @@ public abstract class DatabaseInitializer {
 			properties.load(stream);
 			stream.close();
 		} catch (IOException e) {
-			// TODO Auto-generated catch block
 			e.printStackTrace();
 		}
 		final String DB = properties.getProperty("DB");

@@ -99,8 +99,8 @@ public abstract class TestdataFiller {
 					System.out.println("Falsche Eingabe! " + statusEnum);
 				}
 				ps.setString(16, s[15].toUpperCase());
+				ps.executeUpdate();
 			}
-			ps.executeUpdate();
 
 		} catch (IOException e) {
 			System.out.println("Fehler beim einlesen der Daten!");
@@ -112,7 +112,7 @@ public abstract class TestdataFiller {
 			}
 		}
 
-		System.out.println("Angestellten erfolgreich hinzugefuegt.");
+		System.out.println("Angestellten erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -152,7 +152,6 @@ public abstract class TestdataFiller {
 				ps.setString(2, s[1]);
 				ps.setString(3, s[2]);
 				ps.setDate(4, SQLTableParser.convertingDateFormat(s[3]));
-				System.out.println("1");
 				ps.setString(5, s[4]);
 				ps.setString(6, s[5]);
 				ps.setString(7, s[6]);
@@ -165,11 +164,11 @@ public abstract class TestdataFiller {
 				} else if (titelEnum.equals("FRAU")) {
 					ps.setString(11, titel.FRAU.toString());
 				} else {
+					br.close();
 					throw new IOException();
 				}
 				ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
 				ps.setInt(13, Integer.parseInt(s[12]));
-				System.out.println("2");
 				String statusEnum = s[14];
 				if (statusEnum.equals("VERFUEGBAR")) {
 					ps.setString(14, status.VERFUEGBAR.toString());
@@ -180,14 +179,14 @@ public abstract class TestdataFiller {
 				} else {
 					System.out.println("Falsche Eingabe! " + statusEnum);
 				}
+				ps.executeUpdate();
 			} else {
 				continue;
 			}
-			ps.executeUpdate();
-			br.close();
 		}
 
-		System.out.println("Filialleiter Erfolgreich hinzugefuegt.");
+		System.out.println("Filialleiter erfolgreich hinzugefügt.");
+		br.close();
 
 	}
 
@@ -242,6 +241,7 @@ public abstract class TestdataFiller {
 				} else if (titelEnum.equals("FRAU")) {
 					ps.setString(11, titel.FRAU.toString());
 				} else {
+					br.close();
 					throw new IOException();
 				}
 				ps.setDate(12, SQLTableParser.convertingDateFormat(s[11]));
@@ -267,10 +267,10 @@ public abstract class TestdataFiller {
 				}
 			}
 			ps.executeUpdate();
-			br.close();
 		}
 
-		System.out.println("Kunden Erfolgreich hinzugefuegt.");
+		System.out.println("Kunden erfolgreich hinzugefügt.");
+		br.close();
 	}
 
 	/**
@@ -311,7 +311,7 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 		br.close();
-		System.out.println("Girokonto Erfolgreich hinzugefuegt.");
+		System.out.println("Girokonto erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -348,7 +348,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Sparbuch Erfolgreich hinzugefuegt.");
+		System.out.println("Sparbuch erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -390,7 +390,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Kreditkarte Erfolgreich hinzugefuegt.");
+		System.out.println("Kreditkarte erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -432,7 +432,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Kredit Erfolgreich hinzugefuegt.");
+		System.out.println("Kredit erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -477,7 +477,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Kunde_Sparbuch Erfolgreich hinzugefuegt.");
+		System.out.println("Kunde_Sparbuch erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -528,7 +528,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Kunde_Girokonto Erfolgreich hinzugefuegt.");
+		System.out.println("Kunde_Girokonto erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -574,7 +574,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Kunde_Kreditkarte Erfolgreich hinzugefuegt.");
+		System.out.println("Kunde_Kreditkarte erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -624,7 +624,7 @@ public abstract class TestdataFiller {
 			ps.executeUpdate();
 		}
 		br.close();
-		System.out.println("Kunde_Kredit Erfolgreich hinzugefuegt.");
+		System.out.println("Kunde_Kredit erfolgreich hinzugefügt.");
 	}
 
 	/**
@@ -666,7 +666,7 @@ public abstract class TestdataFiller {
 		}
 
 		br.close();
-		System.out.println("Angestellter_Kunde Erfolgreich hinzugefuegt.");
+		System.out.println("Angestellter_Kunde erfolgreich hinzugefügt.");
 	}
 
 	/**
